@@ -1,6 +1,7 @@
-package edu.jduan8.pcaparser;
+package com.jduan.pcaparser;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 
@@ -18,7 +19,7 @@ public class Reader {
         filePath = filepath;
         try {
             initNIO();
-        } catch(PcapIOException e) {
+        } catch (PcapIOException e) {
             e.printStackTrace();
         }
     }
@@ -37,7 +38,7 @@ public class Reader {
             e.printStackTrace();
         }
 
-        if(zBuffer != null) {
+        if (zBuffer != null) {
             offset += len;
             zBuffer.get(target);
         }
@@ -85,10 +86,10 @@ public class Reader {
 
     public void close() throws PcapException {
         try {
-            if(aFile != null) {
+            if (aFile != null) {
                 aFile.close();
             }
-        } catch(IOException e){
+        } catch (IOException e) {
             throw new PcapIOException("Cant close file: ", filePath);
         }
     }

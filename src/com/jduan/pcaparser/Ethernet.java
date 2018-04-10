@@ -1,4 +1,4 @@
-package edu.jduan8.pcaparser;
+package com.jduan.pcaparser;
 
 import java.util.Arrays;
 
@@ -26,12 +26,12 @@ public final class Ethernet extends Packet {
             case 0x0800:        /* IPv4 protocol */
                 nextLayer = new IPv4(data_buf, 14);
                 break;
-            case 0x0806:        /* IPv6 protocol */
-                nextLayer = new IPv6(data_buf, 14);
-                break;
-            case 0x86DD:        /* address resolution protocol */
-                nextLayer = new ARP(data_buf, 14);
-                break;
+//            case 0x0806:        /* IPv6 protocol */
+//                nextLayer = new IPv6(data_buf, 14);
+//                break;
+//            case 0x86DD:        /* address resolution protocol */
+//                nextLayer = new ARP(data_buf, 14);
+//                break;
         }
     }
 
@@ -50,7 +50,7 @@ public final class Ethernet extends Packet {
             default:
                 return null;
         }
-        return Arrays.copyOfRange(data_buf, offset[i], offset[i]+length[i]);
+        return Arrays.copyOfRange(data_buf, offset[i], offset[i] + length[i]);
     }
 
     public String type() {

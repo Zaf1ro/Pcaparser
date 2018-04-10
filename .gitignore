@@ -23,3 +23,7 @@ hs_err_pid*
 
 # mkdocs
 /site
+
+#idea
+/.idea
+Pcaparser.iml

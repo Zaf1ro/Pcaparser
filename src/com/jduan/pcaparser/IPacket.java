@@ -1,9 +1,11 @@
-package edu.jduan8.pcaparser;
+package com.jduan.pcaparser;
 
 
 interface IPacket {
     byte[] field(String field);
+
     String type();
+
     IPacket next();     /* previous layer */
 
 //    @SuppressWarnings("unchecked")

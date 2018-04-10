@@ -1,12 +1,15 @@
-package edu.jduan8.pcaparser;
+package com.jduan.pcaparser;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /*
  * Enter of program
  */
 public class Pcap {
-//    static Map<String, Packet> proto_map;
+    //    static Map<String, Packet> proto_map;
     static Reader reader;
     static ArrayList<Packet> packets;
     static PcapHdr pcapHdr;
@@ -27,9 +30,9 @@ public class Pcap {
         int linktype = pcapHdr.get_linktype();
 
 
-        while(true) {
+        while (true) {
             Packet aPacket = new Packet();
-            if(!reader.isRemaining())
+            if (!reader.isRemaining())
                 break;
         }
     }
@@ -71,9 +74,9 @@ public class Pcap {
 
         public Packet next() {
             int i = cursor;
-            if(i >= size)
+            if (i >= size)
                 throw new NoSuchElementException();
-            if(i >= packets.size())
+            if (i >= packets.size())
                 throw new ConcurrentModificationException();
             ++cursor;
             return packets.get(i);
@@ -81,9 +84,9 @@ public class Pcap {
 
         public Packet previous() {
             int i = cursor - 1;
-            if(i < 0)
+            if (i < 0)
                 throw new NoSuchElementException();
-            if(i >= packets.size())
+            if (i >= packets.size())
                 throw new ConcurrentModificationException();
             --cursor;
             return packets.get(i);

@@ -1,8 +1,6 @@
-package edu.jduan8.pcaparser;
+package com.jduan.pcaparser;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class PcapHdr implements IPacket {
@@ -43,7 +41,7 @@ public class PcapHdr implements IPacket {
             default:
                 return null;
         }
-        return Arrays.copyOfRange(pcapHdrBuf, offset[i], offset[i]+length[i]);
+        return Arrays.copyOfRange(pcapHdrBuf, offset[i], offset[i] + length[i]);
     }
 
     public int get_linktype() {

@@ -1,9 +1,9 @@
-import edu.jduan8.pcaparser.*;
+import com.jduan.pcaparser.Packet;
+import com.jduan.pcaparser.Pcap;
 
 import java.util.Iterator;
 
-
-public class Main {
+public class Test {
     public static void main(String[] args) {
         byte[] s = {};
 
@@ -13,8 +13,6 @@ public class Main {
         Iterator<Packet> iter = pcap.iterator();
         while(iter.hasNext()) {
             Packet p = iter.next();
-            p.link();
-            s = p.field("magic");
         }
         long end = System.currentTimeMillis();
         System.out.printf("%s: %d\n", "Spend time", end - start);

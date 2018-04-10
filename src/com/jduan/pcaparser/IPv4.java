@@ -1,4 +1,4 @@
-package edu.jduan8.pcaparser;
+package com.jduan.pcaparser;
 
 import java.util.Arrays;
 
@@ -10,24 +10,24 @@ public final class IPv4 implements IPacket {
     private IPacket nextLayer;
 
     IPv4(byte[] __buf, int __start) {
-        assert(__buf != null);
+        assert (__buf != null);
         data_buf = __buf;
         start = __start;
     }
 
     private void link() {
         int type = data_buf[start + 9];
-        switch (type) {
-            case 0x01:        /* IPv4 protocol */
-                nextLayer = new ICMP(data_buf, start + 20);
-                break;
-            case 0x06:        /* IPv6 protocol */
-                nextLayer = new TCP(data_buf, start + 20);
-                break;
-            case 0x11:        /* address resolution protocol */
-                nextLayer = new UDP(data_buf, start + 20);
-                break;
-        }
+//        switch (type) {
+//            case 0x01:        /* IPv4 protocol */
+//                nextLayer = new ICMP(data_buf, start + 20);
+//                break;
+//            case 0x06:        /* IPv6 protocol */
+//                nextLayer = new TCP(data_buf, start + 20);
+//                break;
+//            case 0x11:        /* address resolution protocol */
+//                nextLayer = new UDP(data_buf, start + 20);
+//                break;
+//        }
     }
 
     public byte[] field(String field) {
@@ -66,7 +66,7 @@ public final class IPv4 implements IPacket {
             default:
                 return null;
         }
-        return Arrays.copyOfRange(data_buf, start+offset[i], start+offset[i]+length[i]);
+        return Arrays.copyOfRange(data_buf, start + offset[i], start + offset[i] + length[i]);
     }
 
     public String type() {

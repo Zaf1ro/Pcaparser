@@ -1,4 +1,4 @@
-package edu.jduan8.pcaparser;
+package com.jduan.pcaparser;
 
 
 public class PcapException extends Exception {
@@ -22,6 +22,6 @@ class PcapIOException extends PcapException {
     }
 
     public PcapIOException(String msg, long pos) {
-        super(msg +  Long.toString(pos));
+        super(msg + Long.toString(pos));
     }
 }

@@ -1,4 +1,4 @@
-package edu.jduan8.pcaparser;
+package com.jduan.pcaparser;
 
 import java.util.Arrays;
 
@@ -18,8 +18,6 @@ public class Packet implements IPacket {
         return Utils.byteArrayToInt(pktHdrBuf, 8);
     }
 
-    public void link() {}
-
     public byte[] field(String field) {
         int i;
         switch (field) {
@@ -38,7 +36,7 @@ public class Packet implements IPacket {
             default:
                 return null;
         }
-        return Arrays.copyOfRange(pktHdrBuf, offset[i], offset[i]+length[i]);
+        return Arrays.copyOfRange(pktHdrBuf, offset[i], offset[i] + length[i]);
     }
 
     public String type() {
