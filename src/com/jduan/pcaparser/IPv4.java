@@ -2,12 +2,13 @@ package com.jduan.pcaparser;
 
 import java.util.Arrays;
 
-public final class IPv4 implements IPacket {
+
+public final class IPv4 implements Packet {
     private final static int[] offset = {0, 1, 2, 4, 6, 8, 9, 10, 12, 16};
     private final static int[] length = {1, 1, 2, 2, 2, 1, 1, 2, 4, 4};
     private byte[] data_buf;
     private int start;
-    private IPacket nextLayer;
+    private Packet nextLayer;
 
     IPv4(byte[] __buf, int __start) {
         assert (__buf != null);
@@ -73,8 +74,22 @@ public final class IPv4 implements IPacket {
         return "I";
     }
 
-    public IPacket next() {
+    public Packet next() {
         return nextLayer;
+    }
+
+    public void print() {
+        System.out.printf("IPv4: len:%d, id:0x%04x, proto:%d, src:%s, dst:%s\n",
+                Utils.byteArrayToShort(data_buf, start + offset[2]),
+                Utils.byteArrayToShort(data_buf, start + offset[3]),
+                data_buf[start + offset[6]],
+                Utils.byteArrayToIP(data_buf, start + offset[8]),
+                Utils.byteArrayToIP(data_buf, start + offset[9])
+        );
+        if(nextLayer != null)
+            nextLayer.print();
+        else
+            System.out.println();
     }
 
 }

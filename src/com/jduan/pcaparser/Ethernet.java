@@ -3,11 +3,11 @@ package com.jduan.pcaparser;
 import java.util.Arrays;
 
 
-public final class Ethernet extends Packet {
+public final class Ethernet extends PktHdr {
     private final static int[] offset = {0, 6, 12};
     private final static int[] length = {6, 6, 2};
     private byte[] data_buf;
-    private IPacket nextLayer;
+    private Packet nextLayer;
     int len;                /* total byte of this packet */
 
     Ethernet() {
@@ -16,12 +16,11 @@ public final class Ethernet extends Packet {
         data_buf = new byte[len];
         Pcap.reader.fill(data_buf);
         link();
-        Pcap.packets.add(this);
     }
 
-    public void link() {
+    private void link() {
         /* get the layer 2 protocol */
-        int type = Utils.byteArrayToShort(data_buf, 14);
+        int type = Utils.byteArrayToShort(data_buf, 12);
         switch (type) {
             case 0x0800:        /* IPv4 protocol */
                 nextLayer = new IPv4(data_buf, 14);
@@ -57,7 +56,19 @@ public final class Ethernet extends Packet {
         return "Ethernet";
     }
 
-    public IPacket next() {
+    public Packet next() {
         return nextLayer;
+    }
+
+    public void print() {
+        System.out.printf("Ethernet: dhost:%s, shost:%s, eth_type:%d\n",
+                Utils.byteArrayToMAC(data_buf, offset[0]),
+                Utils.byteArrayToMAC(data_buf, offset[1]),
+                Utils.byteArrayToShort(data_buf,  offset[2])
+        );
+        if(nextLayer != null)
+            nextLayer.print();
+        else
+            System.out.println();
     }
 }

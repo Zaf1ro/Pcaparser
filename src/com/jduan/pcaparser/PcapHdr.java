@@ -3,7 +3,7 @@ package com.jduan.pcaparser;
 import java.util.Arrays;
 
 
-public class PcapHdr implements IPacket {
+public class PcapHdr implements Packet {
     private final static int[] offset = {0, 4, 6, 8, 12, 16, 20};
     private final static int[] length = {4, 2, 2, 4, 4, 4, 4};
     private byte[] pcapHdrBuf;
@@ -45,7 +45,7 @@ public class PcapHdr implements IPacket {
     }
 
     public int get_linktype() {
-        return Utils.byteArrayToInt(pcapHdrBuf, 6);
+        return Utils.byteArrayToInt(pcapHdrBuf, 20);
     }
 
     public void link() { /* do no-op */ }
@@ -56,6 +56,10 @@ public class PcapHdr implements IPacket {
 
     public Packet next() {
         return null;
+    }
+
+    public void print() {
+
     }
 }
 

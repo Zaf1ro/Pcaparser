@@ -1,5 +1,7 @@
 package com.jduan.pcaparser;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
@@ -25,15 +27,20 @@ public class Pcap {
     }
 
     public void unpack() {
-        pcapHdr = new PcapHdr();
-        /* check datalink type */
-        int linktype = pcapHdr.get_linktype();
+        Constructor constructor = null;
+        try {
+            constructor = getConstructor();
+        } catch (PcapException e) {
+            e.printStackTrace();
+        }
 
-
-        while (true) {
-            Packet aPacket = new Packet();
-            if (!reader.isRemaining())
-                break;
+        while (reader.isRemaining()) {
+            try {
+                Packet p = (Packet)constructor.newInstance();
+                packets.add(p);
+            } catch (InvocationTargetException | IllegalAccessException | InstantiationException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -91,5 +98,34 @@ public class Pcap {
             --cursor;
             return packets.get(i);
         }
+    }
+
+    private Constructor getConstructor() throws PcapException {
+        pcapHdr = new PcapHdr();
+
+        /* check datalink type */
+        int linktype = pcapHdr.get_linktype();
+        Class Datalink = null;
+        switch (linktype) {
+            case 0x01:      /* DLT_EN10MB */
+            case 0x03:      /* DLT_EN3MB */
+                Datalink = Ethernet.class;
+                break;
+            case 0x0A:      /* DLT_PPP */
+                break;
+        }
+
+        if(Datalink == null) {
+            throw new PcapException("unsupported datalink type");
+        }
+
+        Constructor constructor = null;
+        try {
+            constructor = Datalink.getDeclaredConstructor();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+
+        return constructor;
     }
 }

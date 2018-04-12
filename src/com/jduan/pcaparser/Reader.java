@@ -25,7 +25,7 @@ public class Reader {
     }
 
     public boolean isRemaining() {
-        return offset <= fileSize;
+        return offset < fileSize;
     }
 
     void fill(byte[] target) {
