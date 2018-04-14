@@ -11,7 +11,9 @@ import java.util.NoSuchElementException;
  * Enter of program
  */
 public class Pcap {
-    //    static Map<String, Packet> proto_map;
+    private final static int DLT_EN10MB = 0x0001;   /* IEEE 802.3 Ethernet */
+    private final static int DLT_PPP = 0x0009;      /* Point-to-Point Protocol */
+
     static Reader reader;
     static ArrayList<Packet> packets;
     public PcapHdr pcapHdr;
@@ -105,23 +107,23 @@ public class Pcap {
 
         /* check datalink type */
         int linktype = pcapHdr.get_linktype();
-        Class Datalink = null;
+        Class cDatalink = null;
         switch (linktype) {
-            case 0x01:      /* DLT_EN10MB */
-            case 0x03:      /* DLT_EN3MB */
-                Datalink = Ethernet.class;
+            case DLT_EN10MB:      /* DLT_EN10MB */
+                cDatalink = Ethernet.class;
                 break;
-            case 0x0A:      /* DLT_PPP */
+            case DLT_PPP:      /* DLT_PPP */
+                cDatalink = PPP.class;
                 break;
         }
 
-        if(Datalink == null) {
+        if(cDatalink == null) {
             throw new PcapException("unsupported datalink type");
         }
 
         Constructor constructor = null;
         try {
-            constructor = Datalink.getDeclaredConstructor();
+            constructor = cDatalink.getDeclaredConstructor();
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }

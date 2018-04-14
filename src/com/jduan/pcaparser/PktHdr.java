@@ -11,7 +11,7 @@ abstract class PktHdr implements Packet {
     private byte[] pktHdr_buf;
 
     PktHdr() {
-        assert Pcap.reader != null;
+        assert(Pcap.reader != null);
         pktHdr_buf = new byte[pkt_len];
         Pcap.reader.fill(pktHdr_buf);
     }
