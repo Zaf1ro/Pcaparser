@@ -1,19 +1,20 @@
 package com.jduan.pcaparser;
 
-import java.util.Arrays;
-
 
 public final class Ethernet extends PktHdr {
-    private final static int[] offset = {0, 6, 12};
-    private final static int[] length = {6, 6, 2};
+    /* https://en.wikipedia.org/wiki/Ethernet_frame */
+    public final static int DHOST = 0;      /* 6, Destination host address */
+    public final static int SHOST = 6;      /* 6, Source host address */
+    public final static int ETH_TYPE = 12;  /* 2, Type of ethernet */
+
+    private final static int ETH_LEN = 14;
+
     private byte[] data_buf;
     private Packet nextLayer;
-    int len;                /* total byte of this packet */
 
     Ethernet() {
         super();
-        this.len = super.getPktLen();
-        data_buf = new byte[len];
+        data_buf = new byte[super.data_len];
         Pcap.reader.fill(data_buf);
         link();
     }
@@ -23,33 +24,28 @@ public final class Ethernet extends PktHdr {
         int type = Utils.byteArrayToShort(data_buf, 12);
         switch (type) {
             case 0x0800:        /* IPv4 protocol */
-                nextLayer = new IPv4(data_buf, 14);
+                nextLayer = new IPv4(data_buf, ETH_LEN);
                 break;
 //            case 0x0806:        /* IPv6 protocol */
 //                nextLayer = new IPv6(data_buf, 14);
 //                break;
-//            case 0x86DD:        /* address resolution protocol */
-//                nextLayer = new ARP(data_buf, 14);
-//                break;
+            case 0x86DD:        /* address resolution protocol */
+                nextLayer = new ARP(data_buf, 14);
+                break;
         }
     }
 
-    public byte[] field(String field) {
-        int i;
-        switch (field) {
-            case "dhost":       /* 6, Destination host address */
-                i = 0;
-                break;
-            case "shost":       /* 6, Source host address */
-                i = 1;
-                break;
-            case "eth_type":    /* 2, Type of ethernet */
-                i = 2;
-                break;
+    public String field(int id) {
+        switch (id) {
+            case DHOST:
+                return Utils.byteArrayToMAC(data_buf, 0);
+            case SHOST:
+                return Utils.byteArrayToMAC(data_buf, 6);
+            case ETH_TYPE:
+                return Short.toString(Utils.byteArrayToShort(data_buf, 12));
             default:
                 return null;
         }
-        return Arrays.copyOfRange(data_buf, offset[i], offset[i] + length[i]);
     }
 
     public String type() {
@@ -60,14 +56,21 @@ public final class Ethernet extends PktHdr {
         return nextLayer;
     }
 
-    public void print() {
-        System.out.printf("Ethernet: dhost:%s, shost:%s, eth_type:%d\n",
-                Utils.byteArrayToMAC(data_buf, offset[0]),
-                Utils.byteArrayToMAC(data_buf, offset[1]),
-                Utils.byteArrayToShort(data_buf,  offset[2])
+    public String text() {
+        return String.format("Ethernet: dhost:%s, shost:%s\n",
+                Utils.byteArrayToMAC(data_buf, 0),
+                Utils.byteArrayToMAC(data_buf, 6)
         );
+    }
+
+    public void print() {
+        System.out.print(text());
+    }
+
+    public void printAll() {
+        print();
         if(nextLayer != null)
-            nextLayer.print();
+            nextLayer.printAll();
         else
             System.out.println();
     }

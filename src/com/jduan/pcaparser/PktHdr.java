@@ -3,19 +3,19 @@ package com.jduan.pcaparser;
 import java.util.Arrays;
 
 
-class PktHdr implements Packet {
+abstract class PktHdr implements Packet {
     private final static int[] offset = {0, 4, 8, 12};
     private final static int[] length = {4, 4, 4, 4};
+    private final static int pkt_len = 16;
+
     private byte[] pktHdr_buf;
+    int data_len;       /* total byte of this packet */
 
     PktHdr() {
         assert Pcap.reader != null;
-        pktHdr_buf = new byte[16];
+        pktHdr_buf = new byte[pkt_len];
         Pcap.reader.fill(pktHdr_buf);
-    }
-
-    int getPktLen() {
-        return Utils.byteArrayToInt(pktHdr_buf, 8);
+        data_len = Utils.byteArrayToInt(pktHdr_buf, 8);
     }
 
     public byte[] field(String field) {

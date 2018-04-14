@@ -25,5 +25,6 @@ hs_err_pid*
 /site
 
 #idea
+/out
 /.idea
 Pcaparser.iml
