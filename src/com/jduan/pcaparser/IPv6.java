@@ -49,9 +49,9 @@ public class IPv6 implements Packet {
             case VERSION:
                 return Integer.toString(data_buf[start] >>> 4);
             case TRAFFI_CLASS:
-                return Integer.toString((Utils.bytes2Short(data_buf, start) >>> 4) & 0xFF);
+                return String.format("%x", (Utils.bytes2Short(data_buf, start) >>> 4) & 0xFF);
             case FLOW_LABEL:
-                return Integer.toString(((data_buf[start+1] >>> 4) << 16) + Utils.bytes2Short(data_buf, start+2));
+                return String.format("%x", (data_buf[start+1] >>> 4) << 16 + Utils.bytes2Short(data_buf, start+2));
             case PAYLOAD_LENGTH:
                 return Short.toString(Utils.bytes2Short(data_buf, start+4));
             case NEXT_HEADER:
