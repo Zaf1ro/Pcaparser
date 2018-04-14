@@ -26,11 +26,11 @@ public final class Ethernet extends PktHdr {
             case 0x0800:        /* IPv4 protocol */
                 nextLayer = new IPv4(data_buf, ETH_LEN);
                 break;
-//            case 0x0806:        /* IPv6 protocol */
+//            case 0x86DD:        /* IPv6 protocol */
 //                nextLayer = new IPv6(data_buf, 14);
 //                break;
-            case 0x86DD:        /* address resolution protocol */
-                nextLayer = new ARP(data_buf, 14);
+            case 0x0806:        /* address resolution protocol */
+                nextLayer = new ARP(data_buf, ETH_LEN);
                 break;
         }
     }

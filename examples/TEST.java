@@ -24,7 +24,7 @@ class Timer {
 }
 
 
-class TEST {
+public class TEST {
     private final static Logger LOGGER = Logger.getLogger(TEST.class.getName());
     public final static Timer timer = new Timer();
 

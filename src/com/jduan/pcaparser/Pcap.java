@@ -14,7 +14,7 @@ public class Pcap {
     //    static Map<String, Packet> proto_map;
     static Reader reader;
     static ArrayList<Packet> packets;
-    static PcapHdr pcapHdr;
+    public PcapHdr pcapHdr;
 
     public Pcap() {
         // get data from network

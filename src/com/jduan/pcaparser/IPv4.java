@@ -4,20 +4,20 @@ package com.jduan.pcaparser;
 import java.util.Arrays;
 
 public final class IPv4 implements Packet {
-    public final static int VERSION = 0;
-    public final static int IHL = 1;
-    public final static int TOS = 2;
-    public final static int ECN = 3;
-    public final static int TOTAL_LENGTH = 4;
-    public final static int IDENTIFICATION = 5;
-    public final static int FLAGS = 6;
-    public final static int FRAGMENT_OFFSET = 7;
-    public final static int TTL = 8;
-    public final static int PROTOCOL = 9;
-    public final static int CHECKSUM = 10;
-    public final static int SRC_IP = 11;
-    public final static int DST_IP = 12;
-    public final static int OPTIONS = 13;
+    public final static int VERSION = 0;            /* 4b, version */
+    public final static int IHL = 1;                /* 4b, internet Header Length */
+    public final static int TOS = 2;                /* 6b, type of service */
+    public final static int ECN = 3;                /* 2b, explicit Congestion Notification */
+    public final static int TOTAL_LENGTH = 4;       /* 2, entire size including header and data */
+    public final static int IDENTIFICATION = 5;     /* 2, identify the group of fragment */
+    public final static int FLAGS = 6;              /* 3b, control fragment */
+    public final static int FRAGMENT_OFFSET = 7;    /* 13b, offset of a particular fragment */
+    public final static int TTL = 8;                /* 1, datagram's lifetime */
+    public final static int PROTOCOL = 9;           /* 1, protocol number */
+    public final static int CHECKSUM = 10;          /* 2, error-checking */
+    public final static int SRC_IP = 11;            /* 4, IPv4 address of sender */
+    public final static int DST_IP = 12;            /* 4, IPv4 address of the receiver */
+    public final static int OPTIONS = 13;           /* 20, options field */
 
     private final static int IP_LEN = 20;
 
@@ -52,29 +52,29 @@ public final class IPv4 implements Packet {
 
         switch (id) {
             case VERSION:
-                return Integer.toString((data_buf[start] >>> 4) & 0x0F);
+                return Integer.toString(data_buf[start] >>> 4);
             case IHL:
                 return Integer.toString(data_buf[start] & 0x0F);
             case TOS:
-                return Integer.toString((data_buf[start+1] >>> 2) & 0xFF);
+                return Integer.toString(data_buf[start+1] >>> 2);
             case ECN:
                 return Integer.toString(data_buf[start+1] & 0x03);
             case TOTAL_LENGTH:
-                return Short.toString(Utils.byteArrayToShort(data_buf, 2));
+                return Short.toString(Utils.byteArrayToShort(data_buf, start+2));
             case IDENTIFICATION:
-                return Short.toString(Utils.byteArrayToShort(data_buf, 4));
+                return String.format("%x", Utils.byteArrayToShort(data_buf, start+4));
             case FLAGS:
-                return Integer.toString((data_buf[start+6] >>> 5) & 0x03);
+                return String.format("%x", data_buf[start+6] >>> 5);
             case FRAGMENT_OFFSET:
                 return Integer.toString(
-                        (Utils.byteArrayToShort(data_buf, 6) >>> 3)
+                        Utils.byteArrayToShort(data_buf, start+6) & 0x1FFF
                 );
             case TTL:
                 return Byte.toString(data_buf[start+8]);
             case PROTOCOL:
                 return Byte.toString(data_buf[start+9]);
             case CHECKSUM:
-                return Short.toString(Utils.byteArrayToShort(data_buf, 10));
+                return String.format("%x", Utils.byteArrayToShort(data_buf, start+10));
             case SRC_IP:
                 return Utils.byteArrayToIP(data_buf, start+12);
             case DST_IP:
@@ -97,8 +97,8 @@ public final class IPv4 implements Packet {
     
     public String text() {
         return String.format("IPv4: len:%d, id:0x%04x, src:%s, dst:%s\n",
-            Utils.byteArrayToShort(data_buf, 2),
-            Utils.byteArrayToShort(data_buf, 4),
+            Utils.byteArrayToShort(data_buf, start+2),
+            Utils.byteArrayToShort(data_buf, start+4),
             Utils.byteArrayToIP(data_buf, start+12),
             Utils.byteArrayToIP(data_buf, start+16)
         );

@@ -25,11 +25,11 @@ public class PcapHdr implements Packet {
     public String field(int id) {
         switch (id) {
             case MAGIC:
-                return Integer.toString(Utils.byteArrayToInt(pcapHdr_buf, 0));
+                return Utils.byteArrayToHex(pcapHdr_buf, 0, 4);
             case V_MAJOR:
-                return Integer.toString(Utils.byteArrayToInt(pcapHdr_buf, 4));
+                return Short.toString(Utils.byteArrayToShort(pcapHdr_buf, 4));
             case V_MINOR:
-                return Integer.toString(Utils.byteArrayToShort(pcapHdr_buf, 6));
+                return Short.toString(Utils.byteArrayToShort(pcapHdr_buf, 6));
             case THISZONE:
                 return Integer.toString(Utils.byteArrayToInt(pcapHdr_buf, 8));
             case SIGFIGS:

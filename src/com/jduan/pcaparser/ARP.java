@@ -2,15 +2,15 @@ package com.jduan.pcaparser;
 
 
 public class ARP implements Packet {
-    private final static int HTYPE = 1;     /* 2, Type of network protocol type */
-    private final static int PTYPE = 2;     /* 2, Type of internetwork protocol */
-    private final static int HLEN = 3;      /* 1, Hardware address length */
-    private final static int PLEN = 4;      /* 1, Protocol address length */
-    private final static int OPERATION = 5; /* 2, Operation */
-    private final static int SHA = 6;       /* 6, Sender hardware address  */
-    private final static int SPA = 7;       /* 4, Sender protocol address */
-    private final static int THA = 8;       /* 6, Target hardware address */
-    private final static int TPA = 9;       /* 4, Target protocol address */
+    public final static int HTYPE = 1;     /* 2, Type of network protocol type */
+    public final static int PTYPE = 2;     /* 2, Type of internetwork protocol */
+    public final static int HLEN = 3;      /* 1, Hardware address length */
+    public final static int PLEN = 4;      /* 1, Protocol address length */
+    public final static int OPERATION = 5; /* 2, Operation */
+    public final static int SHA = 6;       /* 6, Sender hardware address  */
+    public final static int SPA = 7;       /* 4, Sender protocol address */
+    public final static int THA = 8;       /* 6, Target hardware address */
+    public final static int TPA = 9;       /* 4, Target protocol address */
 
     private final static int ARP_LEN = 26;
 
@@ -58,10 +58,10 @@ public class ARP implements Packet {
     }
 
     public String text() {
-        return String.format("ARP: sha:%s, spa:%s, tha:%s, tpa:%s\n",
+        return String.format("ARP: sha:%s, spa:%s,\t tha:%s tpa:%s\n",
                 Utils.byteArrayToMAC(data_buf, start+8),
-                Utils.byteArrayToMAC(data_buf, start+14),
-                Utils.byteArrayToIP(data_buf, start+18),
+                Utils.byteArrayToIP(data_buf, start+14),
+                Utils.byteArrayToMAC(data_buf, start+18),
                 Utils.byteArrayToIP(data_buf,  start+24)
         );
     }
