@@ -1,7 +1,5 @@
 import com.jduan.pcaparser.*;
 
-import java.util.Iterator;
-
 
 public class PcapHdr_T {
     public static void main(String[] args) {

@@ -1,7 +1,5 @@
 package com.jduan.pcaparser;
 
-import java.util.Arrays;
-
 
 public class PcapHdr implements Packet {
     public final static int MAGIC = 1;      /* 32, magic number */
@@ -25,26 +23,26 @@ public class PcapHdr implements Packet {
     public String field(int id) {
         switch (id) {
             case MAGIC:
-                return Utils.byteArrayToHex(pcapHdr_buf, 0, 4);
+                return Utils.bytes2Hex(pcapHdr_buf, 0, 4);
             case V_MAJOR:
-                return Short.toString(Utils.byteArrayToShort(pcapHdr_buf, 4));
+                return Short.toString(Utils.bytes2Short(pcapHdr_buf, 4));
             case V_MINOR:
-                return Short.toString(Utils.byteArrayToShort(pcapHdr_buf, 6));
+                return Short.toString(Utils.bytes2Short(pcapHdr_buf, 6));
             case THISZONE:
-                return Integer.toString(Utils.byteArrayToInt(pcapHdr_buf, 8));
+                return Integer.toString(Utils.bytes2Int(pcapHdr_buf, 8));
             case SIGFIGS:
-                return Integer.toString(Utils.byteArrayToInt(pcapHdr_buf, 12));
+                return Integer.toString(Utils.bytes2Int(pcapHdr_buf, 12));
             case SNAPLEN:
-                return Integer.toString(Utils.byteArrayToInt(pcapHdr_buf, 16));
+                return Integer.toString(Utils.bytes2Int(pcapHdr_buf, 16));
             case LINKTYPE:
-                return Integer.toString(Utils.byteArrayToInt(pcapHdr_buf, 20));
+                return Integer.toString(Utils.bytes2Int(pcapHdr_buf, 20));
             default:
                 return null;
         }
     }
 
     int get_linktype() {
-        return Utils.byteArrayToInt(pcapHdr_buf, 20);
+        return Utils.bytes2Int(pcapHdr_buf, 20);
     }
 
     public String type() {
@@ -57,9 +55,9 @@ public class PcapHdr implements Packet {
     
     public String text() {
         return String.format("Pcap Header: version:%d.%d, snaplen:%d",
-                Utils.byteArrayToShort(pcapHdr_buf, 4),
-                Utils.byteArrayToShort(pcapHdr_buf, 6),
-                Utils.byteArrayToInt(pcapHdr_buf, 16)
+                Utils.bytes2Short(pcapHdr_buf, 4),
+                Utils.bytes2Short(pcapHdr_buf, 6),
+                Utils.bytes2Int(pcapHdr_buf, 16)
         );
     }
     

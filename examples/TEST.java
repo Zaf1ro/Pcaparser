@@ -1,4 +1,6 @@
-import com.jduan.pcaparser.*;
+import com.jduan.pcaparser.Packet;
+import com.jduan.pcaparser.Pcap;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;

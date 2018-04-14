@@ -9,13 +9,15 @@ abstract class PktHdr implements Packet {
     private final static int pkt_len = 16;
 
     private byte[] pktHdr_buf;
-    int data_len;       /* total byte of this packet */
 
     PktHdr() {
         assert Pcap.reader != null;
         pktHdr_buf = new byte[pkt_len];
         Pcap.reader.fill(pktHdr_buf);
-        data_len = Utils.byteArrayToInt(pktHdr_buf, 8);
+    }
+
+    int getDataLen() {
+        return Utils.bytes2Int(pktHdr_buf, 12);
     }
 
     public byte[] field(String field) {
@@ -50,10 +52,10 @@ abstract class PktHdr implements Packet {
 
     public void print() {
         System.out.printf("Packet Header: ts:%d, ts_us:%d, caplen:%d, len:%d\n\n",
-                Utils.byteArrayToInt(pktHdr_buf, 0),
-                Utils.byteArrayToInt(pktHdr_buf, 4),
-                Utils.byteArrayToInt(pktHdr_buf, 8),
-                Utils.byteArrayToInt(pktHdr_buf, 12)
+                Utils.bytes2Int(pktHdr_buf, 0),
+                Utils.bytes2Int(pktHdr_buf, 4),
+                Utils.bytes2Int(pktHdr_buf, 8),
+                Utils.bytes2Int(pktHdr_buf, 12)
         );
     }
 }

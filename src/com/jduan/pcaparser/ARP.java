@@ -27,23 +27,23 @@ public class ARP implements Packet {
     public String field(int id) {
         switch (id) {
             case HTYPE:
-                return Short.toString(Utils.byteArrayToShort(data_buf, start));
+                return Short.toString(Utils.bytes2Short(data_buf, start));
             case PTYPE:
-                return Short.toString(Utils.byteArrayToShort(data_buf, start+2));
+                return Short.toString(Utils.bytes2Short(data_buf, start+2));
             case HLEN:
                 return Byte.toString(data_buf[start+4]);
             case PLEN:
                 return Byte.toString(data_buf[start+5]);
             case OPERATION:
-                return Short.toString(Utils.byteArrayToShort(data_buf, start+6));
+                return Short.toString(Utils.bytes2Short(data_buf, start+6));
             case SHA:
-                return Utils.byteArrayToMAC(data_buf, start+8);
+                return Utils.bytes2MAC(data_buf, start+8);
             case SPA:
-                return Utils.byteArrayToIP(data_buf, start+14);
+                return Utils.bytes2IPv4(data_buf, start+14);
             case THA:
-                return Utils.byteArrayToMAC(data_buf, start+18);
+                return Utils.bytes2MAC(data_buf, start+18);
             case TPA:
-                return Utils.byteArrayToIP(data_buf, start+24);
+                return Utils.bytes2IPv4(data_buf, start+24);
             default:
                 return null;
         }
@@ -59,10 +59,10 @@ public class ARP implements Packet {
 
     public String text() {
         return String.format("ARP: sha:%s, spa:%s,\t tha:%s tpa:%s\n",
-                Utils.byteArrayToMAC(data_buf, start+8),
-                Utils.byteArrayToIP(data_buf, start+14),
-                Utils.byteArrayToMAC(data_buf, start+18),
-                Utils.byteArrayToIP(data_buf,  start+24)
+                Utils.bytes2MAC(data_buf, start+8),
+                Utils.bytes2IPv4(data_buf, start+14),
+                Utils.bytes2MAC(data_buf, start+18),
+                Utils.bytes2IPv4(data_buf,  start+24)
         );
     }
 

@@ -1,5 +1,97 @@
 package com.jduan.pcaparser;
 
-//public class IPv6 implements IPacket {
-//
-//}
+import java.util.Arrays;
+
+
+/* https://en.wikipedia.org/wiki/IPv6_packet */
+public class IPv6 implements Packet {
+    public final static int VERSION = 1;           /* 4b, version */
+    public final static int TRAFFI_CLASS = 2;      /* 1, hold two values: DS, ECN */
+    public final static int FLOW_LABEL = 3;        /* 20b,  label a set of packets belonging to a flow */
+    public final static int PAYLOAD_LENGTH = 4;    /* 2, length of data */
+    public final static int NEXT_HEADER = 5;       /* 1, type of the next header */
+    public final static int HOP_LIMIT = 6;         /* 1, same as TTL */
+    public final static int SRC_ADDR = 7;          /* 16, source address */
+    public final static int DST_ADDR = 8;          /* 16, destination address */
+
+
+    private final static int IPv6_LEN = 20;
+
+    private byte[] data_buf;
+    private int start;
+    private Packet nextLayer;
+
+    IPv6(byte[] __buf, int __start) {
+        assert (__buf != null);
+        data_buf = __buf;
+        start = __start;
+        link();
+    }
+
+    private void link() {
+        int type = data_buf[start + 6];     // proto
+        switch (type) {
+//            case 0x01:        /* ICMP */
+//                nextLayer = new ICMP(data_buf, start + IP_LEN);
+//                break;
+//            case 0x06:        /* TCP */
+//                nextLayer = new TCP(data_buf, start + IP_LEN);
+//                break;
+//            case 0x11:        /* UDP */
+//                nextLayer = new UDP(data_buf, start + IP_LEN);
+//                break;
+        }
+    }
+
+    public String field(int id) {
+        assert(data_buf != null);
+        switch (id) {
+            case VERSION:
+                return Integer.toString(data_buf[start] >>> 4);
+            case TRAFFI_CLASS:
+                return Integer.toString((Utils.bytes2Short(data_buf, start) >>> 4) & 0xFF);
+            case FLOW_LABEL:
+                return Integer.toString(((data_buf[start+1] >>> 4) << 16) + Utils.bytes2Short(data_buf, start+2));
+            case PAYLOAD_LENGTH:
+                return Short.toString(Utils.bytes2Short(data_buf, start+4));
+            case NEXT_HEADER:
+                return Byte.toString(data_buf[start+6]);
+            case HOP_LIMIT:
+                return Byte.toString(data_buf[start+7]);
+            case SRC_ADDR:
+                return Utils.bytes2IPv6(data_buf, start+8);
+            case DST_ADDR:
+                return Utils.bytes2IPv6(data_buf, start+24);
+            default:
+                return null;
+        }
+    }
+
+    public String type() {
+        return "IPv6";
+    }
+
+    public Packet next() {
+        return nextLayer;
+    }
+
+    public String text() {
+        return String.format("IPv6: len:%d, src:%s, dst:%s\n",
+                Utils.bytes2Short(data_buf, start+4),
+                Utils.bytes2IPv6(data_buf, start+8),
+                Utils.bytes2IPv6(data_buf, start+24)
+        );
+    }
+
+    public void print() {
+        System.out.print(text());
+    }
+
+    public void printAll() {
+        print();
+        if(nextLayer != null)
+            nextLayer.print();
+        else
+            System.out.println();
+    }
+}
