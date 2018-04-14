@@ -11,8 +11,9 @@ import java.util.NoSuchElementException;
  * Enter of program
  */
 public class Pcap {
-    private final static int DLT_EN10MB = 0x0001;   /* IEEE 802.3 Ethernet */
-    private final static int DLT_PPP = 0x0009;      /* Point-to-Point Protocol */
+    private final static int DLT_EN10MB = 0x0001;       /* IEEE 802.3 Ethernet */
+    private final static int DLT_PPP = 0x0009;          /* Point-to-Point Protocol */
+    private final static int DLT_IEEE802_11 = 0x0069;   /* IEEE 802.11 wireless LAN */
 
     static Reader reader;
     static ArrayList<Packet> packets;
@@ -114,6 +115,9 @@ public class Pcap {
                 break;
             case DLT_PPP:      /* DLT_PPP */
                 cDatalink = PPP.class;
+                break;
+            case DLT_IEEE802_11:
+                cDatalink = IEEE80211.class;
                 break;
         }
 
