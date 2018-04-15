@@ -23,7 +23,7 @@ public final class Ethernet extends PktHdr {
         /* get the layer 2 protocol */
         int type = Utils.bytes2Short(data_buf, 12) & 0xFFFF;
         switch (type) {
-            case 0x0800:        /* IPv4 protocol */
+            case 0x0800:        /* ICMP protocol */
                 return new IPv4(data_buf, ETH_LEN);
             case 0x86DD:        /* IPv6 protocol */
                 return new IPv6(data_buf, ETH_LEN);

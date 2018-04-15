@@ -7,6 +7,7 @@
     * IEEE 802.11
 2. network
     * ipv4
+    * ipv6
 3. transport
 4. application
 </br>
@@ -14,4 +15,30 @@
 #### 2. TODO
 1. datalink
 2. network
-    * ipv6
+    * ICMP - Control message
+    * IPsec
+    * OSPF
+    * RIP
+3. Transport layer
+    * TCP
+    * UDP
+    * SCTP
+4. Application layer
+    * BGP 
+    * DHCP 
+    * DNS 
+    * FTP 
+    * HTTP 
+    * IMAP 
+    * POP
+    * RTP 
+    * RTSP 
+    * RIP 
+    * SIP 
+    * SMTP 
+    * SNMP 
+    * SSH 
+    * Telnet 
+    * TLS/SSL 
+    * XMPP
+    

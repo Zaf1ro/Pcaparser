@@ -24,7 +24,7 @@ public class Utils {
     }
 
     static String bytes2MAC(byte[] bytes, int ofst) {
-        return String.format("%2x:%2x:%2x:%2x:%2x:%2x",
+        return String.format("%02x:%02x:%02x:%02x:%02x:%02x",
                 bytes[ofst] & 0xFF,
                 bytes[ofst+1] & 0xFF,
                 bytes[ofst+2] & 0xFF,

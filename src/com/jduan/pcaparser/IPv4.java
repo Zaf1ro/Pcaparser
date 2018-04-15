@@ -15,8 +15,8 @@ public final class IPv4 implements Packet {
     public final static int TTL = 8;                /* 1, datagram's lifetime */
     public final static int PROTOCOL = 9;           /* 1, protocol number */
     public final static int CHECKSUM = 10;          /* 2, error-checking */
-    public final static int SRC_ADDR = 11;            /* 4, IPv4 address of sender */
-    public final static int DST_ADDR = 12;            /* 4, IPv4 address of the receiver */
+    public final static int SRC_ADDR = 11;            /* 4, ICMP address of sender */
+    public final static int DST_ADDR = 12;            /* 4, ICMP address of the receiver */
     public final static int OPTIONS = 13;           /* 20, options field */
 
     private final static int IPv4_LEN = 20;
@@ -29,21 +29,22 @@ public final class IPv4 implements Packet {
         assert (__buf != null);
         data_buf = __buf;
         start = __start;
-        link();
+        nextLayer = link();
     }
 
-    private void link() {
-        int type = data_buf[start + 6];     // proto
+    private Packet link() {
+        int type = data_buf[start+9];     // proto
         switch (type) {
-//            case 0x01:        /* ICMP */
-//                nextLayer = new ICMP(data_buf, start + IP_LEN);
-//                break;
+            case 0x01:        /* ICMP */
+                return new ICMP(data_buf, start + IPv4_LEN);
 //            case 0x06:        /* TCP */
 //                nextLayer = new TCP(data_buf, start + IP_LEN);
 //                break;
 //            case 0x11:        /* UDP */
 //                nextLayer = new UDP(data_buf, start + IP_LEN);
 //                break;
+            default:
+                return null;
         }
     }
 
@@ -62,9 +63,9 @@ public final class IPv4 implements Packet {
             case TOTAL_LENGTH:
                 return Short.toString(Utils.bytes2Short(data_buf, start+2));
             case IDENTIFICATION:
-                return String.format("%x", Utils.bytes2Short(data_buf, start+4));
+                return String.format("%04x", Utils.bytes2Short(data_buf, start+4));
             case FLAGS:
-                return String.format("%x", data_buf[start+6] >>> 5);
+                return String.format("%02x", data_buf[start+6] >>> 5);
             case FRAGMENT_OFFSET:
                 return Integer.toString(
                         Utils.bytes2Short(data_buf, start+6) & 0x1FFF
@@ -74,7 +75,7 @@ public final class IPv4 implements Packet {
             case PROTOCOL:
                 return Byte.toString(data_buf[start+9]);
             case CHECKSUM:
-                return String.format("%x", Utils.bytes2Short(data_buf, start+10));
+                return String.format("%04x", Utils.bytes2Short(data_buf, start+10));
             case SRC_ADDR:
                 return Utils.bytes2IPv4(data_buf, start+12);
             case DST_ADDR:
