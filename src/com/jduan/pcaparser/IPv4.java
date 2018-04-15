@@ -36,13 +36,15 @@ public final class IPv4 implements Packet {
         int type = data_buf[start+9];     // proto
         switch (type) {
             case 0x01:        /* ICMP */
-                return new ICMP(data_buf, start + IPv4_LEN);
+                return new ICMP(data_buf, start + start+IPv4_LEN);
 //            case 0x06:        /* TCP */
 //                nextLayer = new TCP(data_buf, start + IP_LEN);
 //                break;
 //            case 0x11:        /* UDP */
 //                nextLayer = new UDP(data_buf, start + IP_LEN);
 //                break;
+            case 0x59:
+                return new OSPF(data_buf, start+IPv4_LEN);
             default:
                 return null;
         }

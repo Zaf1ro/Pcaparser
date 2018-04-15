@@ -17,7 +17,8 @@ abstract class PktHdr implements Packet {
     }
 
     int getDataLen() {
-        return Utils.bytes2Int(pktHdr_buf, 12);
+        int len = Utils.bytes2Int(pktHdr_buf, 12) & 0xFFFF;
+        return len;
     }
 
     public byte[] field(String field) {

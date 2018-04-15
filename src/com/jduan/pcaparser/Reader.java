@@ -30,7 +30,7 @@ public class Reader {
 
     void fill(byte[] target) {
         int len = target.length;
-        assert offset + len < fileSize;
+        assert(offset + len < fileSize);
         MappedByteBuffer zBuffer = null;
         try {
             zBuffer = zRead(len);
@@ -38,10 +38,10 @@ public class Reader {
             e.printStackTrace();
         }
 
-        if (zBuffer != null) {
-            offset += len;
-            zBuffer.get(target);
-        }
+        assert(zBuffer != null);
+        offset += len;
+        zBuffer.get(target);
+
     }
 
     MappedByteBuffer read(long size) {

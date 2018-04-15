@@ -108,4 +108,6 @@ public class TEST {
                 break;
         }
     }
+
+    public static void main(String[] args){ }
 }
