@@ -65,17 +65,6 @@ public class ESP implements Packet {
         pcap.unpack();
         TEST.timer.end("Unpack");
 
-        Packet pcap_hdr = pcap.pcapHdr;
-        System.out.println("MAGIC: " + pcap_hdr.field(PcapHdr.MAGIC));
-        System.out.println("V_MAJOR: " + pcap_hdr.field(PcapHdr.V_MAJOR));
-        System.out.println("V_MINOR: " + pcap_hdr.field(PcapHdr.V_MINOR));
-        System.out.println("THISZONE: " + pcap_hdr.field(PcapHdr.THISZONE));
-        System.out.println("SIGFIGS: " + pcap_hdr.field(PcapHdr.SIGFIGS));
-        System.out.println("SNAPLEN: " + pcap_hdr.field(PcapHdr.SNAPLEN));
-        System.out.println("LINKTYPE: " + pcap_hdr.field(PcapHdr.LINKTYPE));
-
-
-
         TEST.timer.start();
         Iterator<Packet> iter = pcap.iterator();
         Packet eth = iter.next();

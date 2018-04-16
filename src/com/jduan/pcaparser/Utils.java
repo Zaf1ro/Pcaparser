@@ -17,7 +17,7 @@ public class Utils {
 
     static String bytes2Hex(byte[] bytes, int ofst, int length) {
         char[] hexChars = new char[length * 2];
-        for (int i = 0, j = length-1; j >= 0; j--) {
+        for(int i = 0, j = 0; j < length; j++) {
             int v = bytes[ofst+j] & 0xFF;
             hexChars[i++] = HexArray[v >>> 4];
             hexChars[i++] = HexArray[v & 0x0F];

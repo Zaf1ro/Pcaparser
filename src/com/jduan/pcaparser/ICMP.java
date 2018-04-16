@@ -7,7 +7,6 @@ public class ICMP implements Packet{
     public final static int TYPE = 0;            /* 1, ICMP type */
     public final static int CODE = 1;            /* 1, ICMP subtype */
     public final static int CHECKSUM = 2;        /* 2, Error checking data */
-    public final static int REST_OF_HEADER = 3;  /* 4, contents vary based on type and code */
 
     private final static int ICMP_LEN = 20;
 
@@ -23,16 +22,13 @@ public class ICMP implements Packet{
 
     public String field(int id) {
         assert(data_buf != null);
-
         switch (id) {
             case TYPE:
                 return Byte.toString(data_buf[start]);
             case CODE:
                 return Byte.toString(data_buf[start+1]);
             case CHECKSUM:
-                return String.format("%04x", Utils.bytes2Short(data_buf, start+2));
-            case REST_OF_HEADER:
-                return Utils.bytes2Hex(data_buf, start+4, start+8);
+                return Utils.bytes2Hex(data_buf, start+2, 2);
             default:
                 return null;
         }
@@ -84,7 +80,6 @@ public class ICMP implements Packet{
                     System.out.println("TYPE: " + icmp.field(ICMP.TYPE));
                     System.out.println("CODE: " + icmp.field(ICMP.CODE));
                     System.out.println("CHECKSUM: " + icmp.field(ICMP.CHECKSUM));
-                    System.out.println("REST OF HEADER: " + icmp.field(ICMP.REST_OF_HEADER));
                 }
             }
         }
