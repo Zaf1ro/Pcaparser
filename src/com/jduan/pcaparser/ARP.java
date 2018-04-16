@@ -3,7 +3,7 @@ import java.util.Iterator;
 
 
 /* https://en.wikipedia.org/wiki/Address_Resolution_Protocol#Packet_structure */
-public class ARP implements Packet {
+public class ARP extends Protocol {
     public final static int HTYPE = 1;     /* 2, Type of network protocol type */
     public final static int PTYPE = 2;     /* 2, Type of internetwork protocol */
     public final static int HLEN = 3;      /* 1, Hardware address length */
@@ -15,10 +15,7 @@ public class ARP implements Packet {
     public final static int TPA = 9;       /* 4, Target protocol address */
 
     private final static int ARP_LEN = 26;
-
-    private byte[] data_buf;
     private int start;
-    private Packet nextLayer = null;    /* no next layer */
 
     ARP(byte[] __buf, int __start) {
         assert (__buf != null);
@@ -31,7 +28,7 @@ public class ARP implements Packet {
             case HTYPE:
                 return Short.toString(Utils.bytes2Short(data_buf, start));
             case PTYPE:
-                return Short.toString(Utils.bytes2Short(data_buf, start+2));
+                return Utils.bytes2Hex(data_buf, start+2, 2);
             case HLEN:
                 return Byte.toString(data_buf[start+4]);
             case PLEN:
@@ -55,29 +52,11 @@ public class ARP implements Packet {
         return "ARP";
     }
 
-    public Packet next() {
-        return nextLayer;
-    }
-
     public String text() {
-        return String.format("ARP: sha:%s, spa:%s,\t tha:%s tpa:%s\n",
-                Utils.bytes2MAC(data_buf, start+8),
-                Utils.bytes2IPv4(data_buf, start+14),
-                Utils.bytes2MAC(data_buf, start+18),
-                Utils.bytes2IPv4(data_buf,  start+24)
+        return String.format("ARP:\t SHA:%s, SPA:%s",
+                field(ARP.SHA),
+                field(ARP.SPA)
         );
-    }
-
-    public void print() {
-        System.out.print(text());
-    }
-
-    public void printAll() {
-        print();
-        if(nextLayer != null)
-            nextLayer.print();
-        else
-            System.out.println();
     }
 
     public static void main(String[] args) {
@@ -87,10 +66,10 @@ public class ARP implements Packet {
         TEST.timer.end("Unpack");
 
         TEST.timer.start();
-        Iterator<Packet> iter = pcap.iterator();
-        Packet eth = iter.next();
+        Iterator<Protocol> iter = pcap.iterator();
+        Protocol eth = iter.next();
         if(eth instanceof Ethernet) {
-            Packet arp = eth.next();
+            Protocol arp = eth.next();
             if(arp instanceof ARP) {
                 System.out.println("HTYPE: " + arp.field(ARP.HTYPE));
                 System.out.println("PTYPE: " + arp.field(ARP.PTYPE));

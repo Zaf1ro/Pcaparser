@@ -4,10 +4,10 @@ import java.util.Iterator;
 
 // TODO: decode OSPF message
 /* http://www.tcpipguide.com/free/t_OSPFMessageFormats.htm */
-public class OSPF implements Packet {
+public class OSPF extends Protocol {
     public final static int VERSION = 0;        /* 1, Version Number */
     public final static int TYPE = 1;           /* 1, type of OSPF message */
-    public final static int PACKET_LENGTH = 2;  /* 2, Packet Length */
+    public final static int PACKET_LENGTH = 2;  /* 2, Protocol Length */
     public final static int ROUTER_ID = 3;      /* 4, The ID of the router */
     public final static int AREA_ID = 4;        /* 4, An identification of the OSPF area */
     public final static int CHECKSUM = 5;       /* 2, standard IP checksum */
@@ -15,10 +15,7 @@ public class OSPF implements Packet {
     public final static int AUTHENTICATION = 7; /* 8, authentication of the message */
 
     private final static int OSPF_LEN = 24;
-
-    private byte[] data_buf;
     private int start;
-    private Packet nextLayer = null;    /* no next layer */
 
     OSPF(byte[] __buf, int __start) {
         assert (__buf != null);
@@ -28,7 +25,6 @@ public class OSPF implements Packet {
 
     public String field(int id) {
         assert(data_buf != null);
-
         switch (id) {
             case VERSION:
                 return Byte.toString(data_buf[start]);
@@ -41,7 +37,7 @@ public class OSPF implements Packet {
             case AREA_ID:
                 return Utils.bytes2IPv4(data_buf, start+8);
             case CHECKSUM:
-                return String.format("%02x", Utils.bytes2Short(data_buf, start+12));
+                return String.format("0x%02x", Utils.bytes2Short(data_buf, start+12));
             case AUTYPE:
                 return Short.toString(Utils.bytes2Short(data_buf, start+14));
             case AUTHENTICATION:
@@ -55,27 +51,11 @@ public class OSPF implements Packet {
         return "OSPF";
     }
 
-    public Packet next() {
-        return nextLayer;
-    }
-
     public String text() {
-        return String.format("OSPF: router id:%04x, area id:%04x\n",
-                Utils.bytes2Int(data_buf, start+4),
-                Utils.bytes2Int(data_buf, start+8)
+        return String.format("OSPF:\t ROUTER ID:%s, AREA ID:%s",
+                field(OSPF.ROUTER_ID),
+                field(OSPF.AREA_ID)
         );
-    }
-
-    public void print() {
-        System.out.print(text());
-    }
-
-    public void printAll() {
-        print();
-        if(nextLayer != null)
-            nextLayer.print();
-        else
-            System.out.println();
     }
 
     public static void main(String[] args) {
@@ -85,12 +65,12 @@ public class OSPF implements Packet {
         TEST.timer.end("Unpack");
 
         TEST.timer.start();
-        Iterator<Packet> iter = pcap.iterator();
-        Packet eth = iter.next();
+        Iterator<Protocol> iter = pcap.iterator();
+        Protocol eth = iter.next();
         if(eth instanceof Ethernet) {
-            Packet ip = eth.next();
+            Protocol ip = eth.next();
             if(ip instanceof IPv4) {
-                Packet ospf = ip.next();
+                Protocol ospf = ip.next();
                 if(ospf instanceof OSPF) {
                     System.out.println("VERSION: " + ospf.field(OSPF.VERSION));
                     System.out.println("TYPE: " + ospf.field(OSPF.TYPE));

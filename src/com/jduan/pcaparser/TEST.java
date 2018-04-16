@@ -50,9 +50,9 @@ public class TEST {
                 Integer.toString(cal.get(Calendar.SECOND));
 
         long s2 = System.currentTimeMillis();
-        Iterator<Packet> iter = pcap.iterator();
+        Iterator<Protocol> iter = pcap.iterator();
         while(iter.hasNext()) {
-            Packet p = iter.next();
+            Protocol p = iter.next();
 //            LogRecord lr = new LogRecord(Level.INFO, "This is a text log.");
 //            logger.log(lr);
             p.print();
@@ -74,9 +74,9 @@ public class TEST {
 
     private static void test_print(Pcap pcap) {
         long s2 = System.currentTimeMillis();
-        Iterator<Packet> iter = pcap.iterator();
+        Iterator<Protocol> iter = pcap.iterator();
         while(iter.hasNext()) {
-            Packet p = iter.next();
+            Protocol p = iter.next();
             p.print();
         }
         long e2 = System.currentTimeMillis();

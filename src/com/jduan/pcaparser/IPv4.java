@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 
 /* https://en.wikipedia.org/wiki/IPv4#Header */
-public final class IPv4 implements Packet {
+public final class IPv4 extends Protocol {
     public final static int VERSION = 0;            /* 4b, version */
     public final static int IHL = 1;                /* 4b, internet Header Length */
     public final static int TOS = 2;                /* 6b, type of service */
@@ -21,10 +21,7 @@ public final class IPv4 implements Packet {
     public final static int OPTIONS = 13;           /* 20, options field */
 
     private final static int IPv4_LEN = 20;
-
-    private byte[] data_buf;
     private int start;
-    private Packet nextLayer;
 
     IPv4(byte[] __buf, int __start) {
         assert (__buf != null);
@@ -33,20 +30,19 @@ public final class IPv4 implements Packet {
         nextLayer = link();
     }
 
-    private Packet link() {
-        int type = data_buf[start+9];     // proto
+    private Protocol link() {
+        int type = data_buf[start+9];     // protocol
         switch (type) {
             case 0x01:
                 return new ICMP(data_buf, start+IPv4_LEN);
             case 0x06:
                 return new TCP(data_buf, start+IPv4_LEN);
+            case 0x11:
+                return new UDP(data_buf, start + IPv4_LEN);
             case 0x29:
                 return new IPv6(data_buf, start+IPv4_LEN);
             case 0x32:
                 return new ESP(data_buf, start+IPv4_LEN);
-//            case 0x11:
-//                nextLayer = new UDP(data_buf, start + IP_LEN);
-//                break;
             case 0x59:
                 return new OSPF(data_buf, start+IPv4_LEN);
             default:
@@ -56,39 +52,36 @@ public final class IPv4 implements Packet {
 
     public String field(int id) {
         assert(data_buf != null);
-
         switch (id) {
             case VERSION:
                 return Integer.toString((data_buf[start] >>> 4) & 0xFF);
             case IHL:
                 return Integer.toString(data_buf[start] & 0x0F);
             case TOS:
-                return Integer.toString(data_buf[start+1] >>> 2);
+                return String.format("0x%02x", (data_buf[start+1] >>> 2) & 0x3F);
             case ECN:
                 return Integer.toString(data_buf[start+1] & 0x03);
             case TOTAL_LENGTH:
                 return Short.toString(Utils.bytes2Short(data_buf, start+2));
             case IDENTIFICATION:
-                return String.format("%04x", Utils.bytes2Short(data_buf, start+4));
+                return String.format("0x%04x", Utils.bytes2Short(data_buf, start+4));
             case FLAGS:
-                return String.format("%02x", data_buf[start+6] >>> 5);
+                return String.format("0x%02x", (data_buf[start+6] >>> 5) & 0x7);
             case FRAGMENT_OFFSET:
-                return Integer.toString(
-                        Utils.bytes2Short(data_buf, start+6) & 0x1FFF
-                );
+                return Integer.toString(Utils.bytes2Short(data_buf, start+6) & 0x1FFF);
             case TTL:
                 return Byte.toString(data_buf[start+8]);
             case PROTOCOL:
                 return Byte.toString(data_buf[start+9]);
             case CHECKSUM:
-                return String.format("%04x", Utils.bytes2Short(data_buf, start+10));
+                return String.format("0x%04x", Utils.bytes2Short(data_buf, start+10));
             case SRC_ADDR:
                 return Utils.bytes2IPv4(data_buf, start+12);
             case DST_ADDR:
                 return Utils.bytes2IPv4(data_buf, start+16);
             case OPTIONS:
                 return (data_buf[start] & 0x0F) > 5 ?
-                    new String(Arrays.copyOfRange(data_buf, start+20, start+36)) : null;
+                    new String(Arrays.copyOfRange(data_buf, start+20, start+36)) : "";
             default:
                 return null;
         }
@@ -97,30 +90,12 @@ public final class IPv4 implements Packet {
     public String type() {
         return "IPv4";
     }
-
-    public Packet next() {
-        return nextLayer;
-    }
     
     public String text() {
-        return String.format("IPv4: len:%d, id:0x%04x, src:%s, dst:%s\n",
-            Utils.bytes2Short(data_buf, start+2),
-            Utils.bytes2Short(data_buf, start+4),
-            Utils.bytes2IPv4(data_buf, start+12),
-            Utils.bytes2IPv4(data_buf, start+16)
+        return String.format("IPv4:\t SRC IP:%s, DST IP:%s",
+                field(IPv4.SRC_ADDR),
+                field(IPv4.DST_ADDR)
         );
-    }
-    
-    public void print() {
-        System.out.print(text());
-    }
-    
-    public void printAll() {
-        print();
-        if(nextLayer != null)
-            nextLayer.print();
-        else
-            System.out.println();
     }
 
     public static void main(String[] args) {
@@ -130,10 +105,10 @@ public final class IPv4 implements Packet {
         TEST.timer.end("Unpack");
 
         TEST.timer.start();
-        Iterator<Packet> iter = pcap.iterator();
-        Packet eth = iter.next();
+        Iterator<Protocol> iter = pcap.iterator();
+        Protocol eth = iter.next();
         if(eth instanceof Ethernet) {
-            Packet ipv4 = eth.next();
+            Protocol ipv4 = eth.next();
             if(ipv4 instanceof IPv4) {
                 System.out.println("VERSION: " + ipv4.field(IPv4.VERSION));
                 System.out.println("IHL: " + ipv4.field(IPv4.IHL));

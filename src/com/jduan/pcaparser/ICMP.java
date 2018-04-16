@@ -3,16 +3,13 @@ import java.util.Iterator;
 
 
 /* https://en.wikipedia.org/wiki/Internet_Control_Message_Protocol#Header */
-public class ICMP implements Packet{
+public class ICMP extends Protocol {
     public final static int TYPE = 0;            /* 1, ICMP type */
     public final static int CODE = 1;            /* 1, ICMP subtype */
     public final static int CHECKSUM = 2;        /* 2, Error checking data */
 
     private final static int ICMP_LEN = 20;
-
-    private byte[] data_buf;
     private int start;
-    private Packet nextLayer = null;    /* no next layer */
 
     ICMP(byte[] __buf, int __start) {
         assert (__buf != null);
@@ -38,29 +35,11 @@ public class ICMP implements Packet{
         return "ICMP";
     }
 
-    public Packet next() {
-        return nextLayer;
-    }
-
     public String text() {
-        return String.format("ICMP: len:%d, id:0x%04x, src:%s, dst:%s\n",
-                Utils.bytes2Short(data_buf, start+2),
-                Utils.bytes2Short(data_buf, start+4),
-                Utils.bytes2IPv4(data_buf, start+12),
-                Utils.bytes2IPv4(data_buf, start+16)
+        return String.format("ICMP:\t TYPE:%s, CODE:%s",
+                field(ICMP.TYPE),
+                field(ICMP.CODE)
         );
-    }
-
-    public void print() {
-        System.out.print(text());
-    }
-
-    public void printAll() {
-        print();
-        if(nextLayer != null)
-            nextLayer.print();
-        else
-            System.out.println();
     }
 
     public static void main(String[] args) {
@@ -70,12 +49,12 @@ public class ICMP implements Packet{
         TEST.timer.end("Unpack");
 
         TEST.timer.start();
-        Iterator<Packet> iter = pcap.iterator();
-        Packet eth = iter.next();
+        Iterator<Protocol> iter = pcap.iterator();
+        Protocol eth = iter.next();
         if(eth instanceof Ethernet) {
-            Packet ip = eth.next();
+            Protocol ip = eth.next();
             if(ip instanceof IPv4) {
-                Packet icmp = ip.next();
+                Protocol icmp = ip.next();
                 if(icmp instanceof ICMP) {
                     System.out.println("TYPE: " + icmp.field(ICMP.TYPE));
                     System.out.println("CODE: " + icmp.field(ICMP.CODE));

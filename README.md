@@ -14,6 +14,7 @@
     * IPsec(FIX: byte order)
 3. transport
     * TCP
+    * UDP
 4. application
 </br>
 
@@ -21,7 +22,6 @@
 1. datalink
 2. network
 3. Transport layer
-    * UDP
     * SCTP
 4. Application layer
     * BGP 

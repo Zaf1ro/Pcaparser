@@ -3,15 +3,12 @@ import java.util.Iterator;
 
 
 /* https://en.wikipedia.org/wiki/IPsec#Encapsulating_Security_Payload */
-public class ESP implements Packet {
+public class ESP extends Protocol {
     public final static int SPI = 0;        /* 4, Security Parameters Index */
     public final static int SEQUENCE = 1;   /* 4, A sequence number to protect against replay attacks */
 
     private final static int ESP_LEN = 8;
-
-    private byte[] data_buf;
     private int start;
-    private Packet nextLayer = null;    /* no next layer */
 
     ESP(byte[] __buf, int __start) {
         assert (__buf != null);
@@ -21,7 +18,6 @@ public class ESP implements Packet {
 
     public String field(int id) {
         assert(data_buf != null);
-
         switch (id) {
             case SPI:
                 return Utils.bytes2Hex(data_buf, start, 4);
@@ -36,27 +32,11 @@ public class ESP implements Packet {
         return "ESP";
     }
 
-    public Packet next() {
-        return nextLayer;
-    }
-
     public String text() {
-        return String.format("ESP: spi:%d, seq:%d\n",
-                Utils.bytes2Int(data_buf, start),
-                Utils.bytes2Int(data_buf, start+4)
+        return String.format("ESP:\t SPI:%s, SEQ:%s",
+                field(ESP.SPI),
+                field(ESP.SEQUENCE)
         );
-    }
-
-    public void print() {
-        System.out.print(text());
-    }
-
-    public void printAll() {
-        print();
-        if(nextLayer != null)
-            nextLayer.print();
-        else
-            System.out.println();
     }
 
     public static void main(String[] args) {
@@ -66,12 +46,12 @@ public class ESP implements Packet {
         TEST.timer.end("Unpack");
 
         TEST.timer.start();
-        Iterator<Packet> iter = pcap.iterator();
-        Packet eth = iter.next();
+        Iterator<Protocol> iter = pcap.iterator();
+        Protocol eth = iter.next();
         if(eth instanceof Ethernet) {
-            Packet ip = eth.next();
+            Protocol ip = eth.next();
             if(ip instanceof IPv4) {
-                Packet esp = ip.next();
+                Protocol esp = ip.next();
                 if(esp instanceof ESP) {
                     System.out.println("SPI: " + esp.field(ESP.SPI));
                     System.out.println("SEQUENCE: " + esp.field(ESP.SEQUENCE));

@@ -2,7 +2,7 @@ package com.jduan.pcaparser;
 
 
 public class Utils {
-    private final static char[] HexArray = "0123456789ABCDEF".toCharArray();
+    private final static char[] HexArray = "0123456789abcdef".toCharArray();
 
     static int bytes2Int(byte[] bytes, int ofst) {
         return bytes[ofst+3] << 24
@@ -22,7 +22,7 @@ public class Utils {
             hexChars[i++] = HexArray[v >>> 4];
             hexChars[i++] = HexArray[v & 0x0F];
         }
-        return new String(hexChars);
+        return String.format("0x%s", new String(hexChars));
     }
 
     static String bytes2MAC(byte[] bytes, int ofst) {

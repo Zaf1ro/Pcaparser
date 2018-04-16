@@ -3,32 +3,30 @@ import java.util.Iterator;
 
 
 /* https://en.wikipedia.org/wiki/Point-to-Point_Protocol#Structure_of_a_PPP_frame */
-public class PPP extends PktHdr {
+public class PPP extends Protocol {
     public final static int ADDR = 0;       /* 1, standard broadcast address */
     public final static int CONTROL = 1;    /* 1, unnumbered data */
     public final static int PROTOCOL = 2;   /* 2, PPP ID of embedded data */
 
+    private PktHdr pktHdr;
     private final static int PPP_LEN = 4;
 
-    private byte[] data_buf;
-    private Packet nextLayer = null;    /* no next layer */
-
     PPP() {
-        super();
-        data_buf = new byte[getDataLen()];
+        pktHdr = new PktHdr();
+        data_buf = new byte[pktHdr.getDataLen()];
         Pcap.reader.fill(data_buf);
     }
 
     public String field(int id) {
         switch (id) {
             case ADDR:
-                return String.format("%x", data_buf[0]);
+                return String.format("0x%02x", data_buf[0]);
             case CONTROL:
-                return String.format("%x", data_buf[1]);
+                return String.format("0x%02x", data_buf[1]);
             case PROTOCOL:
-                return String.format("%x", Utils.bytes2Short(data_buf, 2));
+                return Utils.bytes2Hex(data_buf, 2, 2);
             default:
-                return null;
+                return pktHdr.field(id);
         }
     }
 
@@ -36,28 +34,10 @@ public class PPP extends PktHdr {
         return "PPP";
     }
 
-    public Packet next() {
-        return nextLayer;
-    }
-
     public String text() {
-        return String.format("PPP: addr:%x, control:%x, proto:%x\n",
-                data_buf[0],
-                data_buf[1],
-                Utils.bytes2Short(data_buf, 2)
+        return String.format("PPP:\t ADDR:%s\n",
+                field(PPP.ADDR)
         );
-    }
-
-    public void print() {
-        System.out.print(text());
-    }
-
-    public void printAll() {
-        print();
-        if(nextLayer != null)
-            nextLayer.printAll();
-        else
-            System.out.println();
     }
 
     public static void main(String[] args) {
@@ -68,12 +48,12 @@ public class PPP extends PktHdr {
 
         TEST.timer.start();
 
-        Iterator<Packet> iter = pcap.iterator();
-        Packet ppp = iter.next();
+        Iterator<Protocol> iter = pcap.iterator();
+        Protocol ppp = iter.next();
         if(ppp instanceof PPP) {
             System.out.println("ADDR: " + ppp.field(PPP.ADDR));
             System.out.println("CONTROL: " + ppp.field(PPP.CONTROL));
-            System.out.println("PROTOCOL: " + ppp.field(PPP.CONTROL));
+            System.out.println("PROTOCOL: " + ppp.field(PPP.PROTOCOL));
         }
 
         TEST.timer.end("PRINT");

@@ -1,10 +1,9 @@
 package com.jduan.pcaparser;
-import java.util.Arrays;
 import java.util.Iterator;
 
 
 /* Transmission_Control_Protocol#TCP_segment_structure */
-public class TCP implements Packet {
+public class TCP extends Protocol {
     public final static int SPORT = 0;      /* 2, the sending port */
     public final static int DPORT = 1;      /* 2, the receiving port */
     public final static int SEQ = 2;        /* 4, Sequence number */
@@ -15,10 +14,8 @@ public class TCP implements Packet {
     public final static int CHECKSUM = 7;   /* 2, error-checking of the header */
     public final static int URP = 8;        /* 2, determined by the data offset field */
 
-    private byte[] data_buf;
     private int start;
     private int TCP_LEN;
-    private Packet nextLayer;
 
     TCP(byte[] __buf, int __start) {
         assert (__buf != null);
@@ -27,7 +24,7 @@ public class TCP implements Packet {
         nextLayer = link();
     }
 
-    private Packet link() {
+    private Protocol link() {
 //        int type = data_buf[start+9];     // proto
 //        switch (type) {
 //            default:
@@ -51,7 +48,7 @@ public class TCP implements Packet {
             case OFFSET:
                 return Integer.toString((data_buf[start+12] >>> 4) & 0x0F);
             case FLAGS:
-                return String.format("%04x", Utils.bytes2Short(data_buf, start+12) & 0x01FF);
+                return String.format("0x%04x", Utils.bytes2Short(data_buf, start+12) & 0x01FF);
             case WINDOW:
                 return Integer.toString(Utils.bytes2Short(data_buf, start+14) & 0xFFFF);
             case CHECKSUM:
@@ -67,27 +64,11 @@ public class TCP implements Packet {
         return "TCP";
     }
 
-    public Packet next() {
-        return nextLayer;
-    }
-
     public String text() {
-        return String.format("TCP: sport:%d, dport:%d\n",
-                Utils.bytes2Short(data_buf, start),
-                Utils.bytes2Short(data_buf, start+2)
+        return String.format("TCP:\t SPORT:%s, DPORT:%s",
+                field(TCP.SPORT),
+                field(TCP.DPORT)
         );
-    }
-
-    public void print() {
-        System.out.print(text());
-    }
-
-    public void printAll() {
-        print();
-        if(nextLayer != null)
-            nextLayer.print();
-        else
-            System.out.println();
     }
 
     public static void main(String[] args) {
@@ -97,12 +78,12 @@ public class TCP implements Packet {
         TEST.timer.end("Unpack");
 
         TEST.timer.start();
-        Iterator<Packet> iter = pcap.iterator();
-        Packet eth = iter.next();
+        Iterator<Protocol> iter = pcap.iterator();
+        Protocol eth = iter.next();
         if(eth instanceof Ethernet) {
-            Packet ipv4 = eth.next();
+            Protocol ipv4 = eth.next();
             if(ipv4 instanceof IPv4) {
-                Packet tcp = ipv4.next();
+                Protocol tcp = ipv4.next();
                 if(tcp instanceof TCP) {
                     System.out.println("SPORT: " + tcp.field(TCP.SPORT));
                     System.out.println("DPORT: " + tcp.field(TCP.DPORT));
