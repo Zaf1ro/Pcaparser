@@ -1,5 +1,4 @@
-import com.jduan.pcaparser.Packet;
-import com.jduan.pcaparser.Pcap;
+package com.jduan.pcaparser;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,8 +33,7 @@ public class TEST {
         String pcap_path = "";
         try {
             File dir = new File("examples");
-            pcap_path = dir.getCanonicalPath() + File.separator +
-                    "data" + File.separator;
+            pcap_path = dir.getCanonicalPath() + File.separator;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -109,5 +107,7 @@ public class TEST {
         }
     }
 
-    public static void main(String[] args){ }
+    public static void main(String[] args){
+
+    }
 }

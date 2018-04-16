@@ -1,54 +1,43 @@
 package com.jduan.pcaparser;
 
-import java.util.Arrays;
 
-
+/* https://wiki.wireshark.org/Development/LibpcapFileFormat#Record_.28Packet.29_Header */
 abstract class PktHdr implements Packet {
-    private final static int[] offset = {0, 4, 8, 12};
-    private final static int[] length = {4, 4, 4, 4};
-    private final static int pkt_len = 16;
+    private final static int TS_SEC = -1;       /* 4, timestamps seconds */
+    private final static int TS_USEC = -2;      /* 4, timestamps microseconds */
+    private final static int INCL_LEN = -3;     /* 4, actual length of packet */
+    private final static int ORIG_LEN = -4;     /* 4, total length of packet */
+    private final static int PKTHDR_LEN = 16;
 
     private byte[] pktHdr_buf;
 
     PktHdr() {
         assert(Pcap.reader != null);
-        pktHdr_buf = new byte[pkt_len];
+        pktHdr_buf = new byte[PKTHDR_LEN];
         Pcap.reader.fill(pktHdr_buf);
     }
 
     int getDataLen() {
-        int len = Utils.bytes2Int(pktHdr_buf, 12) & 0xFFFF;
-        return len;
+        return Utils.bytes2Int(pktHdr_buf, 12) & 0xFFFF;
     }
 
-    public byte[] field(String field) {
-        int i;
+    public String field(int field) {
         switch (field) {
-            case "ts_s":    /* 32, timestamps seconds */
-                i = 0;
-                break;
-            case "ts_us":   /* 32, timestamps microseconds */
-                i = 1;
-                break;
-            case "caplen":  /* 32, actual length of packet */
-                i = 2;
-                break;
-            case "len":     /* 32, total length of packet */
-                i = 3;
-                break;
+            case TS_SEC:
+                return Integer.toString(Utils.bytes2Int(pktHdr_buf, 0));
+            case TS_USEC:
+                return Integer.toString(Utils.bytes2Int(pktHdr_buf, 4));
+            case INCL_LEN:
+                return Integer.toString(Utils.bytes2Int(pktHdr_buf, 8));
+            case ORIG_LEN:
+                return Integer.toString(Utils.bytes2Int(pktHdr_buf, 12));
             default:
                 return null;
         }
-        return Arrays.copyOfRange(pktHdr_buf, offset[i], offset[i] + length[i]);
     }
 
     public String type() {
         return "Packet Header";
-    }
-
-    public Packet next() {
-        // check
-        return null;
     }
 
     public void print() {

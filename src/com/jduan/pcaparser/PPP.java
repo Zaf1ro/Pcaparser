@@ -1,5 +1,8 @@
 package com.jduan.pcaparser;
+import java.util.Iterator;
 
+
+/* https://en.wikipedia.org/wiki/Point-to-Point_Protocol#Structure_of_a_PPP_frame */
 public class PPP extends PktHdr {
     public final static int ADDR = 0;       /* 1, standard broadcast address */
     public final static int CONTROL = 1;    /* 1, unnumbered data */
@@ -8,22 +11,12 @@ public class PPP extends PktHdr {
     private final static int PPP_LEN = 4;
 
     private byte[] data_buf;
-    private Packet nextLayer;
+    private Packet nextLayer = null;    /* no next layer */
 
     PPP() {
         super();
         data_buf = new byte[getDataLen()];
         Pcap.reader.fill(data_buf);
-        nextLayer = link();
-    }
-
-    private Packet link() {
-        /* get the layer 2 protocol */
-        int type = Utils.bytes2Short(data_buf, 2) & 0xFFFF;
-        switch (type) {
-            default:
-                return null;
-        }
     }
 
     public String field(int id) {
@@ -65,5 +58,24 @@ public class PPP extends PktHdr {
             nextLayer.printAll();
         else
             System.out.println();
+    }
+
+    public static void main(String[] args) {
+        TEST.timer.start();
+        Pcap pcap = new Pcap(TEST.getDir() + "ppp.pcap");
+        pcap.unpack();
+        TEST.timer.end("Unpack");
+
+        TEST.timer.start();
+
+        Iterator<Packet> iter = pcap.iterator();
+        Packet ppp = iter.next();
+        if(ppp instanceof PPP) {
+            System.out.println("ADDR: " + ppp.field(PPP.ADDR));
+            System.out.println("CONTROL: " + ppp.field(PPP.CONTROL));
+            System.out.println("PROTOCOL: " + ppp.field(PPP.CONTROL));
+        }
+
+        TEST.timer.end("PRINT");
     }
 }

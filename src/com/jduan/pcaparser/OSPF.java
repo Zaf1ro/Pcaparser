@@ -1,4 +1,5 @@
 package com.jduan.pcaparser;
+import java.util.Iterator;
 
 
 // TODO: decode OSPF message
@@ -17,17 +18,12 @@ public class OSPF implements Packet {
 
     private byte[] data_buf;
     private int start;
-    private Packet nextLayer;
+    private Packet nextLayer = null;    /* no next layer */
 
     OSPF(byte[] __buf, int __start) {
         assert (__buf != null);
         data_buf = __buf;
         start = __start;
-        nextLayer = link();
-    }
-
-    private Packet link() {
-        return null;
     }
 
     public String field(int id) {
@@ -80,5 +76,33 @@ public class OSPF implements Packet {
             nextLayer.print();
         else
             System.out.println();
+    }
+
+    public static void main(String[] args) {
+        TEST.timer.start();
+        Pcap pcap = new Pcap(TEST.getDir() + "ospf.pcap");
+        pcap.unpack();
+        TEST.timer.end("Unpack");
+
+        TEST.timer.start();
+        Iterator<Packet> iter = pcap.iterator();
+        Packet eth = iter.next();
+        if(eth instanceof Ethernet) {
+            Packet ip = eth.next();
+            if(ip instanceof IPv4) {
+                Packet ospf = ip.next();
+                if(ospf instanceof OSPF) {
+                    System.out.println("VERSION: " + ospf.field(OSPF.VERSION));
+                    System.out.println("TYPE: " + ospf.field(OSPF.TYPE));
+                    System.out.println("PACKET_LENGTH: " + ospf.field(OSPF.PACKET_LENGTH));
+                    System.out.println("ROUTER_ID: " + ospf.field(OSPF.ROUTER_ID));
+                    System.out.println("AREA_ID: " + ospf.field(OSPF.AREA_ID));
+                    System.out.println("CHECKSUM: " + ospf.field(OSPF.CHECKSUM));
+                    System.out.println("AUTYPE: " + ospf.field(OSPF.AUTYPE));
+                    System.out.println("AUTHENTICATION: " + ospf.field(OSPF.AUTHENTICATION));
+                }
+            }
+        }
+        TEST.timer.end("PRINT");
     }
 }

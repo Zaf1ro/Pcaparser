@@ -9,6 +9,7 @@
     * ipv4
     * ipv6
     * ICMP(TODO: Control message)
+    * OSPF(TODO: Message)
 3. transport
 4. application
 </br>
@@ -17,7 +18,6 @@
 1. datalink
 2. network
     * IPsec
-    * OSPF_T
     * RIP
 3. Transport layer
     * TCP

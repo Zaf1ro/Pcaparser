@@ -3,13 +3,11 @@ package com.jduan.pcaparser;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.Iterator;
+import java.util.ConcurrentModificationException;
 import java.util.NoSuchElementException;
 
-/*
- * Enter of program
- */
+
 public class Pcap {
     private final static int DLT_EN10MB = 0x0001;       /* IEEE 802.3 Ethernet */
     private final static int DLT_PPP = 0x0009;          /* Point-to-Point Protocol */
@@ -46,10 +44,6 @@ public class Pcap {
             }
         }
     }
-
-//    public Packet find(String proto) {
-//        return proto_map.getOrDefault(proto, null);
-//    }
 
     public Iterator<Packet> iterator() {
         return new PacketItr();
@@ -110,13 +104,13 @@ public class Pcap {
         int linktype = pcapHdr.get_linktype();
         Class cDatalink = null;
         switch (linktype) {
-            case DLT_EN10MB:      /* DLT_EN10MB */
+            case DLT_EN10MB:        /* DLT_EN10MB */
                 cDatalink = Ethernet.class;
                 break;
-            case DLT_PPP:      /* DLT_PPP */
+            case DLT_PPP:           /* DLT_PPP */
                 cDatalink = PPP.class;
                 break;
-            case DLT_IEEE802_11:
+            case DLT_IEEE802_11:    /* IEEE802.11 */
                 cDatalink = IEEE80211.class;
                 break;
         }
@@ -131,7 +125,6 @@ public class Pcap {
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
-
         return constructor;
     }
 }

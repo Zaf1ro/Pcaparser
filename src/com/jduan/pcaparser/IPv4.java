@@ -1,8 +1,9 @@
 package com.jduan.pcaparser;
-
-
 import java.util.Arrays;
+import java.util.Iterator;
 
+
+/* https://en.wikipedia.org/wiki/IPv4#Header */
 public final class IPv4 implements Packet {
     public final static int VERSION = 0;            /* 4b, version */
     public final static int IHL = 1;                /* 4b, internet Header Length */
@@ -37,6 +38,8 @@ public final class IPv4 implements Packet {
         switch (type) {
             case 0x01:        /* ICMP */
                 return new ICMP(data_buf, start + start+IPv4_LEN);
+            case 0x32:
+                return new ESP(data_buf, start+IPv4_LEN);
 //            case 0x06:        /* TCP */
 //                nextLayer = new TCP(data_buf, start + IP_LEN);
 //                break;
@@ -55,7 +58,7 @@ public final class IPv4 implements Packet {
 
         switch (id) {
             case VERSION:
-                return Integer.toString(data_buf[start] >>> 4);
+                return Integer.toString((data_buf[start] >>> 4) & 0xFF);
             case IHL:
                 return Integer.toString(data_buf[start] & 0x0F);
             case TOS:
@@ -117,5 +120,36 @@ public final class IPv4 implements Packet {
             nextLayer.print();
         else
             System.out.println();
+    }
+
+    public static void main(String[] args) {
+        TEST.timer.start();
+        Pcap pcap = new Pcap(TEST.getDir() + "ipv4.pcap");
+        pcap.unpack();
+        TEST.timer.end("Unpack");
+
+        TEST.timer.start();
+        Iterator<Packet> iter = pcap.iterator();
+        Packet eth = iter.next();
+        if(eth instanceof Ethernet) {
+            Packet ipv4 = eth.next();
+            if(ipv4 instanceof IPv4) {
+                System.out.println("VERSION: " + ipv4.field(IPv4.VERSION));
+                System.out.println("IHL: " + ipv4.field(IPv4.IHL));
+                System.out.println("TOS: " + ipv4.field(IPv4.TOS));
+                System.out.println("ECN: " + ipv4.field(IPv4.ECN));
+                System.out.println("TOTAL LENGTH: " + ipv4.field(IPv4.TOTAL_LENGTH));
+                System.out.println("IDENTIFICATION: " + ipv4.field(IPv4.IDENTIFICATION));
+                System.out.println("FLAGS: " + ipv4.field(IPv4.FLAGS));
+                System.out.println("FRAGMENT OFFSET: " + ipv4.field(IPv4.FRAGMENT_OFFSET));
+                System.out.println("TTL: " + ipv4.field(IPv4.TTL));
+                System.out.println("PROTOCOL: " + ipv4.field(IPv4.PROTOCOL));
+                System.out.println("CHECKSUM: " + ipv4.field(IPv4.CHECKSUM));
+                System.out.println("SRC ADDR: " + ipv4.field(IPv4.SRC_ADDR));
+                System.out.println("DST ADDR: " + ipv4.field(IPv4.DST_ADDR));
+                System.out.println("OPTIONS: " + ipv4.field(IPv4.OPTIONS));
+            }
+        }
+        TEST.timer.end("PRINT");
     }
 }

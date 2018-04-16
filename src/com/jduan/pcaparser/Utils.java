@@ -5,8 +5,10 @@ public class Utils {
     private final static char[] HexArray = "0123456789ABCDEF".toCharArray();
 
     static int bytes2Int(byte[] bytes, int ofst) {
-        return bytes[ofst+3] << 24 | (bytes[ofst+2] & 0xFF) << 16 |
-                (bytes[ofst+1] & 0xFF) << 8 | (bytes[ofst] & 0xFF);
+        return bytes[ofst+3] << 24
+                | (bytes[ofst+2] & 0xFF) << 16
+                | (bytes[ofst+1] & 0xFF) << 8
+                | (bytes[ofst] & 0xFF);
     }
 
     static short bytes2Short(byte[] bytes, int ofst) {

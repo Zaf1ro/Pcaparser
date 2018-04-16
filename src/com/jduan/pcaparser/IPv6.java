@@ -1,6 +1,5 @@
 package com.jduan.pcaparser;
-
-import java.util.Arrays;
+import java.util.Iterator;
 
 
 /* https://en.wikipedia.org/wiki/IPv6_packet */
@@ -13,7 +12,6 @@ public class IPv6 implements Packet {
     public final static int HOP_LIMIT = 6;         /* 1, same as TTL */
     public final static int SRC_ADDR = 7;          /* 16, source address */
     public final static int DST_ADDR = 8;          /* 16, destination address */
-
 
     private final static int IPv6_LEN = 20;
 
@@ -29,8 +27,8 @@ public class IPv6 implements Packet {
     }
 
     private void link() {
-        int type = data_buf[start + 6];     // proto
-        switch (type) {
+//        int type = data_buf[start + 6];     // proto
+//        switch (type) {
 //            case 0x01:        /* ICMP */
 //                nextLayer = new ICMP(data_buf, start + IP_LEN);
 //                break;
@@ -40,7 +38,7 @@ public class IPv6 implements Packet {
 //            case 0x11:        /* UDP */
 //                nextLayer = new UDP(data_buf, start + IP_LEN);
 //                break;
-        }
+//        }
     }
 
     public String field(int id) {
@@ -93,5 +91,30 @@ public class IPv6 implements Packet {
             nextLayer.print();
         else
             System.out.println();
+    }
+
+    public static void main(String[] args) {
+        TEST.timer.start();
+        Pcap pcap = new Pcap(TEST.getDir() + "ipv6.pcap");
+        pcap.unpack();
+        TEST.timer.end("Unpack");
+
+        TEST.timer.start();
+        Iterator<Packet> iter = pcap.iterator();
+        Packet eth = iter.next();
+        if(eth instanceof Ethernet) {
+            Packet ipv6 = eth.next();
+            if(ipv6 instanceof IPv6) {
+                System.out.println("VERSION: " + ipv6.field(IPv6.VERSION));
+                System.out.println("TRAFFI CLASS: " + ipv6.field(IPv6.TRAFFI_CLASS));
+                System.out.println("FLOW LABEL: " + ipv6.field(IPv6.FLOW_LABEL));
+                System.out.println("PAYLOAD LENGTH: " + ipv6.field(IPv6.PAYLOAD_LENGTH));
+                System.out.println("NEXT HEADER: " + ipv6.field(IPv6.NEXT_HEADER));
+                System.out.println("HOP LIMIT: " + ipv6.field(IPv6.HOP_LIMIT));
+                System.out.println("SRC ADDR: " + ipv6.field(IPv6.SRC_ADDR));
+                System.out.println("DST ADDR: " + ipv6.field(IPv6.DST_ADDR));
+            }
+        }
+        TEST.timer.end("PRINT");
     }
 }

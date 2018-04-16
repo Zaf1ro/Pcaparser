@@ -1,4 +1,5 @@
 package com.jduan.pcaparser;
+import java.util.Iterator;
 
 
 /* https://en.wikipedia.org/wiki/Ethernet_frame */
@@ -41,7 +42,7 @@ public final class Ethernet extends PktHdr {
             case SHOST:
                 return Utils.bytes2MAC(data_buf, 6);
             case ETH_TYPE:
-                return Short.toString(Utils.bytes2Short(data_buf, 12));
+                return String.format("%04x", Utils.bytes2Short(data_buf, 12));
             default:
                 return null;
         }
@@ -72,5 +73,22 @@ public final class Ethernet extends PktHdr {
             nextLayer.printAll();
         else
             System.out.println();
+    }
+
+    public static void main(String[] args) {
+        TEST.timer.start();
+        Pcap pcap = new Pcap(TEST.getDir() + "eth.pcap");
+        pcap.unpack();
+        TEST.timer.end("Unpack");
+
+        TEST.timer.start();
+        Iterator<Packet> iter = pcap.iterator();
+        Packet eth = iter.next();
+        if(eth instanceof Ethernet) {
+            System.out.println("DHOST: " + eth.field(Ethernet.DHOST));
+            System.out.println("SHOST: " + eth.field(Ethernet.SHOST));
+            System.out.println("ETH_TYPE: " + eth.field(Ethernet.ETH_TYPE));
+        }
+        TEST.timer.end("PRINT");
     }
 }
