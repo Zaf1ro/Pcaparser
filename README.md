@@ -9,19 +9,18 @@
     * ipv4
     * ipv6
     * ICMP(TODO: Control message)
+    * ICMP6
     * OSPF(TODO: Message)
     * IPsec(FIX: byte order)
 3. transport
+    * TCP
 4. application
 </br>
 
 #### 2. TODO
 1. datalink
 2. network
-    
-    * RIP
 3. Transport layer
-    * TCP
     * UDP
     * SCTP
 4. Application layer
@@ -30,9 +29,9 @@
     * DNS 
     * FTP 
     * HTTP 
-    * IMAP 
+    * IMAP
     * POP
-    * RTP 
+    * RTP
     * RTSP 
     * RIP 
     * SIP 

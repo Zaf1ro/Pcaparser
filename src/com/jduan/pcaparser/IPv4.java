@@ -38,13 +38,12 @@ public final class IPv4 implements Packet {
         switch (type) {
             case 0x01:
                 return new ICMP(data_buf, start+IPv4_LEN);
+            case 0x06:
+                return new TCP(data_buf, start+IPv4_LEN);
             case 0x29:
                 return new IPv6(data_buf, start+IPv4_LEN);
             case 0x32:
                 return new ESP(data_buf, start+IPv4_LEN);
-//            case 0x06:
-//                nextLayer = new TCP(data_buf, start + IP_LEN);
-//                break;
 //            case 0x11:
 //                nextLayer = new UDP(data_buf, start + IP_LEN);
 //                break;
