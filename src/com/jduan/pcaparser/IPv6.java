@@ -13,7 +13,8 @@ public class IPv6 implements Packet {
     public final static int SRC_ADDR = 7;          /* 16, source address */
     public final static int DST_ADDR = 8;          /* 16, destination address */
 
-    private final static int IPv6_LEN = 20;
+    private int IPv6_LEN;
+    private int payload_len;
 
     private byte[] data_buf;
     private int start;
@@ -23,22 +24,23 @@ public class IPv6 implements Packet {
         assert (__buf != null);
         data_buf = __buf;
         start = __start;
-        link();
+        payload_len = Utils.bytes2Short(data_buf, start+4);
+        IPv6_LEN = data_buf.length - payload_len - start;
+        nextLayer = link();
     }
 
-    private void link() {
-//        int type = data_buf[start + 6];     // proto
-//        switch (type) {
-//            case 0x01:        /* ICMP */
-//                nextLayer = new ICMP(data_buf, start + IP_LEN);
-//                break;
-//            case 0x06:        /* TCP */
-//                nextLayer = new TCP(data_buf, start + IP_LEN);
-//                break;
-//            case 0x11:        /* UDP */
-//                nextLayer = new UDP(data_buf, start + IP_LEN);
-//                break;
-//        }
+    private Packet link() {
+        int type = data_buf[start+6];   // next header
+        switch (type) {
+            case 0x03A:
+                return new ICMP6(data_buf, data_buf.length-payload_len);
+//            case 0x06:
+//                return new TCP(data_buf, start + IPv6_LEN);
+//            case 0x11:
+//                nextLayer = new UDP(data_buf, start + IPv6_LEN);
+            default:
+                return null;
+        }
     }
 
     public String field(int id) {

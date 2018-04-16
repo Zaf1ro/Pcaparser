@@ -16,8 +16,8 @@ public final class IPv4 implements Packet {
     public final static int TTL = 8;                /* 1, datagram's lifetime */
     public final static int PROTOCOL = 9;           /* 1, protocol number */
     public final static int CHECKSUM = 10;          /* 2, error-checking */
-    public final static int SRC_ADDR = 11;            /* 4, ICMP address of sender */
-    public final static int DST_ADDR = 12;            /* 4, ICMP address of the receiver */
+    public final static int SRC_ADDR = 11;          /* 4, ICMP address of sender */
+    public final static int DST_ADDR = 12;          /* 4, ICMP address of the receiver */
     public final static int OPTIONS = 13;           /* 20, options field */
 
     private final static int IPv4_LEN = 20;
@@ -36,14 +36,16 @@ public final class IPv4 implements Packet {
     private Packet link() {
         int type = data_buf[start+9];     // proto
         switch (type) {
-            case 0x01:        /* ICMP */
-                return new ICMP(data_buf, start + start+IPv4_LEN);
+            case 0x01:
+                return new ICMP(data_buf, start+IPv4_LEN);
+            case 0x29:
+                return new IPv6(data_buf, start+IPv4_LEN);
             case 0x32:
                 return new ESP(data_buf, start+IPv4_LEN);
-//            case 0x06:        /* TCP */
+//            case 0x06:
 //                nextLayer = new TCP(data_buf, start + IP_LEN);
 //                break;
-//            case 0x11:        /* UDP */
+//            case 0x11:
 //                nextLayer = new UDP(data_buf, start + IP_LEN);
 //                break;
             case 0x59:
