@@ -1,4 +1,5 @@
 package com.jduan.pcaparser;
+
 import java.util.Iterator;
 
 
@@ -6,8 +7,8 @@ import java.util.Iterator;
 public class UDP extends Protocol {
     public final static int SPORT = 0;      /* 2, the sending port */
     public final static int DPORT = 1;      /* 2, the receiving port */
-    public final static int LENGTH = 2;        /* 4, Sequence number */
-    public final static int CHECKSUM = 3;        /* 4, Acknowledgment number */
+    public final static int LENGTH = 2;     /* 2, the length in bytes of the UDP header and UDP data */
+    public final static int CHECKSUM = 3;   /* 2, error-checking of the header and data */
 
     private static final int UDP_LEN = 8;
     private int start;
@@ -24,17 +25,17 @@ public class UDP extends Protocol {
     }
 
     public String field(int id) {
-        assert(data_buf != null);
+        assert (data_buf != null);
 
         switch (id) {
             case SPORT:
                 return Short.toString(Utils.bytes2Short(data_buf, start));
             case DPORT:
-                return Short.toString(Utils.bytes2Short(data_buf, start+2));
+                return Short.toString(Utils.bytes2Short(data_buf, start + 2));
             case LENGTH:
-                return Short.toString(Utils.bytes2Short(data_buf, start+4));
+                return Short.toString(Utils.bytes2Short(data_buf, start + 4));
             case CHECKSUM:
-                return Utils.bytes2Hex(data_buf, start+6, 2);
+                return Utils.bytes2Hex(data_buf, start + 6, 2);
             default:
                 return null;
         }
@@ -60,15 +61,15 @@ public class UDP extends Protocol {
         TEST.timer.start();
         Iterator<Protocol> iter = pcap.iterator();
         Protocol eth = iter.next();
-        if(eth instanceof Ethernet) {
+        if (eth instanceof Ethernet) {
             Protocol ipv4 = eth.next();
-            if(ipv4 instanceof IPv4) {
+            if (ipv4 instanceof IPv4) {
                 Protocol udp = ipv4.next();
-                if(udp instanceof UDP) {
+                if (udp instanceof UDP) {
                     System.out.println("SPORT: " + udp.field(UDP.SPORT));
                     System.out.println("DPORT: " + udp.field(UDP.DPORT));
                     System.out.println("LENGTH: " + udp.field(UDP.LENGTH));
-                    System.out.println("ACK: " + udp.field(UDP.CHECKSUM));
+                    System.out.println("CHECKSUM: " + udp.field(UDP.CHECKSUM));
                 }
             }
         }

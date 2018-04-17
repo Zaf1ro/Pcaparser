@@ -1,4 +1,5 @@
 package com.jduan.pcaparser;
+
 import java.util.Iterator;
 
 
@@ -24,16 +25,16 @@ public class SCTP extends Protocol {
     }
 
     public String field(int id) {
-        assert(data_buf != null);
+        assert (data_buf != null);
         switch (id) {
             case SPORT:
                 return Short.toString(Utils.bytes2Short(data_buf, start));
             case DPORT:
-                return Short.toString(Utils.bytes2Short(data_buf, start+2));
+                return Short.toString(Utils.bytes2Short(data_buf, start + 2));
             case TAG:
-                return Utils.bytes2Hex(data_buf, start+4, 4);
+                return Utils.bytes2Hex(data_buf, start + 4, 4);
             case CHECKSUM:
-                return Utils.bytes2Hex(data_buf, start+8, 4);
+                return Utils.bytes2Hex(data_buf, start + 8, 4);
             default:
                 return null;
         }
@@ -59,11 +60,11 @@ public class SCTP extends Protocol {
         TEST.timer.start();
         Iterator<Protocol> iter = pcap.iterator();
         Protocol eth = iter.next();
-        if(eth instanceof Ethernet) {
+        if (eth instanceof Ethernet) {
             Protocol ipv4 = eth.next();
-            if(ipv4 instanceof IPv4) {
+            if (ipv4 instanceof IPv4) {
                 Protocol sctp = ipv4.next();
-                if(sctp instanceof SCTP) {
+                if (sctp instanceof SCTP) {
                     System.out.println("SPORT: " + sctp.field(SCTP.SPORT));
                     System.out.println("DPORT: " + sctp.field(SCTP.DPORT));
                     System.out.println("VERIFICATION TAG: " + sctp.field(SCTP.TAG));

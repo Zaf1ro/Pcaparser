@@ -2,7 +2,6 @@ package com.jduan.pcaparser;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.nio.ByteOrder;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 
@@ -31,7 +30,7 @@ public class Reader {
 
     void fill(byte[] target) {
         int len = target.length;
-        assert(offset + len < fileSize);
+        assert (offset + len < fileSize);
         MappedByteBuffer zBuffer = null;
         try {
             zBuffer = zRead(len);
@@ -39,7 +38,7 @@ public class Reader {
             e.printStackTrace();
         }
 
-        assert(zBuffer != null);
+        assert (zBuffer != null);
         offset += len;
         zBuffer.get(target);
     }

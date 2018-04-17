@@ -1,4 +1,5 @@
 package com.jduan.pcaparser;
+
 import java.util.Iterator;
 
 
@@ -28,21 +29,21 @@ public class ARP extends Protocol {
             case HTYPE:
                 return Short.toString(Utils.bytes2Short(data_buf, start));
             case PTYPE:
-                return Utils.bytes2Hex(data_buf, start+2, 2);
+                return Utils.bytes2Hex(data_buf, start + 2, 2);
             case HLEN:
-                return Byte.toString(data_buf[start+4]);
+                return Byte.toString(data_buf[start + 4]);
             case PLEN:
-                return Byte.toString(data_buf[start+5]);
+                return Byte.toString(data_buf[start + 5]);
             case OPERATION:
-                return Short.toString(Utils.bytes2Short(data_buf, start+6));
+                return Short.toString(Utils.bytes2Short(data_buf, start + 6));
             case SHA:
-                return Utils.bytes2MAC(data_buf, start+8);
+                return Utils.bytes2MAC(data_buf, start + 8);
             case SPA:
-                return Utils.bytes2IPv4(data_buf, start+14);
+                return Utils.bytes2IPv4(data_buf, start + 14);
             case THA:
-                return Utils.bytes2MAC(data_buf, start+18);
+                return Utils.bytes2MAC(data_buf, start + 18);
             case TPA:
-                return Utils.bytes2IPv4(data_buf, start+24);
+                return Utils.bytes2IPv4(data_buf, start + 24);
             default:
                 return null;
         }
@@ -68,9 +69,9 @@ public class ARP extends Protocol {
         TEST.timer.start();
         Iterator<Protocol> iter = pcap.iterator();
         Protocol eth = iter.next();
-        if(eth instanceof Ethernet) {
+        if (eth instanceof Ethernet) {
             Protocol arp = eth.next();
-            if(arp instanceof ARP) {
+            if (arp instanceof ARP) {
                 System.out.println("HTYPE: " + arp.field(ARP.HTYPE));
                 System.out.println("PTYPE: " + arp.field(ARP.PTYPE));
                 System.out.println("HLEN: " + arp.field(ARP.HLEN));

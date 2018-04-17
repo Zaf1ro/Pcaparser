@@ -1,4 +1,5 @@
 package com.jduan.pcaparser;
+
 import java.util.Iterator;
 
 
@@ -61,7 +62,7 @@ public final class IEEE80211 extends Protocol {
 
         Iterator<Protocol> iter = pcap.iterator();
         Protocol ieee802_11 = iter.next();
-        if(ieee802_11 instanceof IEEE80211) {
+        if (ieee802_11 instanceof IEEE80211) {
             System.out.println("FRAME_CONTROL: " + ieee802_11.field(IEEE80211.FRAME_CONTROL));
             System.out.println("DURATION: " + ieee802_11.field(IEEE80211.DURATION));
             System.out.println("ADDR1: " + ieee802_11.field(IEEE80211.ADDR1));

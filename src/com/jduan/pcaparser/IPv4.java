@@ -1,4 +1,5 @@
 package com.jduan.pcaparser;
+
 import java.util.Arrays;
 import java.util.Iterator;
 
@@ -31,57 +32,59 @@ public final class IPv4 extends Protocol {
     }
 
     private Protocol link() {
-        int type = data_buf[start+9];     // protocol
+        int type = data_buf[start + 9] & 0xFF;     // protocol
         switch (type) {
             case 0x01:
-                return new ICMP(data_buf, start+IPv4_LEN);
+                return new ICMP(data_buf, start + IPv4_LEN);
             case 0x06:
-                return new TCP(data_buf, start+IPv4_LEN);
+                return new TCP(data_buf, start + IPv4_LEN);
             case 0x11:
                 return new UDP(data_buf, start + IPv4_LEN);
             case 0x29:
-                return new IPv6(data_buf, start+IPv4_LEN);
+                return new IPv6(data_buf, start + IPv4_LEN);
             case 0x32:
-                return new ESP(data_buf, start+IPv4_LEN);
+                return new ESP(data_buf, start + IPv4_LEN);
+            case 0x84:
+                return new SCTP(data_buf, start + IPv4_LEN);
             case 0x59:
-                return new OSPF(data_buf, start+IPv4_LEN);
+                return new OSPF(data_buf, start + IPv4_LEN);
             default:
                 return null;
         }
     }
 
     public String field(int id) {
-        assert(data_buf != null);
+        assert (data_buf != null);
         switch (id) {
             case VERSION:
                 return Integer.toString((data_buf[start] >>> 4) & 0xFF);
             case IHL:
                 return Integer.toString(data_buf[start] & 0x0F);
             case TOS:
-                return String.format("0x%02x", (data_buf[start+1] >>> 2) & 0x3F);
+                return String.format("0x%02x", (data_buf[start + 1] >>> 2) & 0x3F);
             case ECN:
-                return Integer.toString(data_buf[start+1] & 0x03);
+                return Integer.toString(data_buf[start + 1] & 0x03);
             case TOTAL_LENGTH:
-                return Short.toString(Utils.bytes2Short(data_buf, start+2));
+                return Short.toString(Utils.bytes2Short(data_buf, start + 2));
             case IDENTIFICATION:
-                return String.format("0x%04x", Utils.bytes2Short(data_buf, start+4));
+                return String.format("0x%04x", Utils.bytes2Short(data_buf, start + 4));
             case FLAGS:
-                return String.format("0x%02x", (data_buf[start+6] >>> 5) & 0x7);
+                return String.format("0x%02x", (data_buf[start + 6] >>> 5) & 0x7);
             case FRAGMENT_OFFSET:
-                return Integer.toString(Utils.bytes2Short(data_buf, start+6) & 0x1FFF);
+                return Integer.toString(Utils.bytes2Short(data_buf, start + 6) & 0x1FFF);
             case TTL:
-                return Byte.toString(data_buf[start+8]);
+                return Byte.toString(data_buf[start + 8]);
             case PROTOCOL:
-                return Byte.toString(data_buf[start+9]);
+                return Byte.toString(data_buf[start + 9]);
             case CHECKSUM:
-                return String.format("0x%04x", Utils.bytes2Short(data_buf, start+10));
+                return String.format("0x%04x", Utils.bytes2Short(data_buf, start + 10));
             case SRC_ADDR:
-                return Utils.bytes2IPv4(data_buf, start+12);
+                return Utils.bytes2IPv4(data_buf, start + 12);
             case DST_ADDR:
-                return Utils.bytes2IPv4(data_buf, start+16);
+                return Utils.bytes2IPv4(data_buf, start + 16);
             case OPTIONS:
                 return (data_buf[start] & 0x0F) > 5 ?
-                    new String(Arrays.copyOfRange(data_buf, start+20, start+36)) : "";
+                        new String(Arrays.copyOfRange(data_buf, start + 20, start + 36)) : "";
             default:
                 return null;
         }
@@ -90,7 +93,7 @@ public final class IPv4 extends Protocol {
     public String type() {
         return "IPv4";
     }
-    
+
     public String text() {
         return String.format("IPv4:\t SRC IP:%s, DST IP:%s",
                 field(IPv4.SRC_ADDR),
@@ -107,9 +110,9 @@ public final class IPv4 extends Protocol {
         TEST.timer.start();
         Iterator<Protocol> iter = pcap.iterator();
         Protocol eth = iter.next();
-        if(eth instanceof Ethernet) {
+        if (eth instanceof Ethernet) {
             Protocol ipv4 = eth.next();
-            if(ipv4 instanceof IPv4) {
+            if (ipv4 instanceof IPv4) {
                 System.out.println("VERSION: " + ipv4.field(IPv4.VERSION));
                 System.out.println("IHL: " + ipv4.field(IPv4.IHL));
                 System.out.println("TOS: " + ipv4.field(IPv4.TOS));

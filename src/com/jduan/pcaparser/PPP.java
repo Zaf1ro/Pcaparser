@@ -1,4 +1,5 @@
 package com.jduan.pcaparser;
+
 import java.util.Iterator;
 
 
@@ -50,7 +51,7 @@ public class PPP extends Protocol {
 
         Iterator<Protocol> iter = pcap.iterator();
         Protocol ppp = iter.next();
-        if(ppp instanceof PPP) {
+        if (ppp instanceof PPP) {
             System.out.println("ADDR: " + ppp.field(PPP.ADDR));
             System.out.println("CONTROL: " + ppp.field(PPP.CONTROL));
             System.out.println("PROTOCOL: " + ppp.field(PPP.PROTOCOL));

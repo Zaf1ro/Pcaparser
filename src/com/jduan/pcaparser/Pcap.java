@@ -3,8 +3,8 @@ package com.jduan.pcaparser;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.ConcurrentModificationException;
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 
@@ -69,7 +69,7 @@ public class Pcap {
 
         while (reader.isRemaining()) {
             try {
-                Protocol p = (Protocol)constructor.newInstance();
+                Protocol p = (Protocol) constructor.newInstance();
                 packets.add(p);
             } catch (InvocationTargetException | IllegalAccessException | InstantiationException e) {
                 e.printStackTrace();
@@ -131,7 +131,7 @@ public class Pcap {
 
     private Constructor getConstructor() throws PcapException {
         pcapHdr_buf = new byte[PCAPHDR_LEN];
-        assert(Pcap.reader != null);
+        assert (Pcap.reader != null);
         Pcap.reader.fill(pcapHdr_buf);
 
         /* check datalink type */
@@ -149,7 +149,7 @@ public class Pcap {
                 break;
         }
 
-        if(cDatalink == null) {
+        if (cDatalink == null) {
             throw new PcapException("unsupported datalink type");
         }
 

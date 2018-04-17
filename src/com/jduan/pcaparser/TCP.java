@@ -1,4 +1,5 @@
 package com.jduan.pcaparser;
+
 import java.util.Iterator;
 
 
@@ -34,27 +35,27 @@ public class TCP extends Protocol {
     }
 
     public String field(int id) {
-        assert(data_buf != null);
+        assert (data_buf != null);
 
         switch (id) {
             case SPORT:
                 return Short.toString(Utils.bytes2Short(data_buf, start));
             case DPORT:
-                return Short.toString(Utils.bytes2Short(data_buf, start+2));
+                return Short.toString(Utils.bytes2Short(data_buf, start + 2));
             case SEQ:
-                return Utils.bytes2Hex(data_buf, start+4, 4);
+                return Utils.bytes2Hex(data_buf, start + 4, 4);
             case ACK:
-                return Utils.bytes2Hex(data_buf, start+8, 4);
+                return Utils.bytes2Hex(data_buf, start + 8, 4);
             case OFFSET:
-                return Integer.toString((data_buf[start+12] >>> 4) & 0x0F);
+                return Integer.toString((data_buf[start + 12] >>> 4) & 0x0F);
             case FLAGS:
-                return String.format("0x%04x", Utils.bytes2Short(data_buf, start+12) & 0x01FF);
+                return String.format("0x%04x", Utils.bytes2Short(data_buf, start + 12) & 0x01FF);
             case WINDOW:
-                return Integer.toString(Utils.bytes2Short(data_buf, start+14) & 0xFFFF);
+                return Integer.toString(Utils.bytes2Short(data_buf, start + 14) & 0xFFFF);
             case CHECKSUM:
-                return Utils.bytes2Hex(data_buf, start+16, 2);
+                return Utils.bytes2Hex(data_buf, start + 16, 2);
             case URP:
-                return Short.toString(Utils.bytes2Short(data_buf, start+18));
+                return Short.toString(Utils.bytes2Short(data_buf, start + 18));
             default:
                 return null;
         }
@@ -80,11 +81,11 @@ public class TCP extends Protocol {
         TEST.timer.start();
         Iterator<Protocol> iter = pcap.iterator();
         Protocol eth = iter.next();
-        if(eth instanceof Ethernet) {
+        if (eth instanceof Ethernet) {
             Protocol ipv4 = eth.next();
-            if(ipv4 instanceof IPv4) {
+            if (ipv4 instanceof IPv4) {
                 Protocol tcp = ipv4.next();
-                if(tcp instanceof TCP) {
+                if (tcp instanceof TCP) {
                     System.out.println("SPORT: " + tcp.field(TCP.SPORT));
                     System.out.println("DPORT: " + tcp.field(TCP.DPORT));
                     System.out.println("SEQ: " + tcp.field(TCP.SEQ));

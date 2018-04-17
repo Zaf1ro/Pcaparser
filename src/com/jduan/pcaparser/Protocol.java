@@ -15,7 +15,7 @@ public abstract class Protocol implements IProtocol {
 
     public void printAll() {
         print();
-        if(nextLayer != null)
+        if (nextLayer != null)
             nextLayer.print();
         else
             System.out.println();

@@ -4,14 +4,16 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Iterator;
-import java.util.logging.*;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 
 class Timer {
     private long start = 0;
 
     void start() {
-        if(start > 0) {
+        if (start > 0) {
             System.out.println("Warn - Please End the timer before starting!!!");
             return;
         }
@@ -51,7 +53,7 @@ public class TEST {
 
         long s2 = System.currentTimeMillis();
         Iterator<Protocol> iter = pcap.iterator();
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             Protocol p = iter.next();
 //            LogRecord lr = new LogRecord(Level.INFO, "This is a text log.");
 //            logger.log(lr);
@@ -75,7 +77,7 @@ public class TEST {
     private static void test_print(Pcap pcap) {
         long s2 = System.currentTimeMillis();
         Iterator<Protocol> iter = pcap.iterator();
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             Protocol p = iter.next();
             p.print();
         }
@@ -85,9 +87,9 @@ public class TEST {
 
     private static void test(String filename,
                              int type   /* 0: no print, no log
-                                         * 1: print into console
-                                         * 2: write into log
-                                         */
+     * 1: print into console
+     * 2: write into log
+     */
     ) {
         long s1 = System.currentTimeMillis();
         Pcap pcap = new Pcap(getDir() + filename);
@@ -95,7 +97,7 @@ public class TEST {
         long e1 = System.currentTimeMillis();
         System.out.printf("%s: %d sec\n", "UNPACK: ", e1 - s1);
 
-        switch(type) {
+        switch (type) {
             case 0:
                 System.out.println("NO LOG: Spend no time");
                 break;
@@ -107,7 +109,7 @@ public class TEST {
         }
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
 
     }
 }

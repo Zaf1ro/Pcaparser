@@ -1,5 +1,9 @@
 site_name: Pcaparser
+repo_url: https://github.com/Zaf1ro/Pcaparser
+repo_name: 'GitHub'
+site_author: Jason Duan
 pages:
-- Home: index.md 
+- Introduction: index.md
+- Example: example.md
 - About: about.md
 theme: readthedocs

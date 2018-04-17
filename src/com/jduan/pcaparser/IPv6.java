@@ -1,4 +1,5 @@
 package com.jduan.pcaparser;
+
 import java.util.Iterator;
 
 
@@ -21,44 +22,44 @@ public class IPv6 extends Protocol {
         assert (__buf != null);
         data_buf = __buf;
         start = __start;
-        payload_len = Utils.bytes2Short(data_buf, start+4);
+        payload_len = Utils.bytes2Short(data_buf, start + 4);
         IPv6_LEN = data_buf.length - payload_len - start;
         nextLayer = link();
     }
 
     private Protocol link() {
-        int type = data_buf[start+6];   // next header
+        int type = data_buf[start + 6];   // next header
         switch (type) {
             case 0x03A:
-                return new ICMP6(data_buf, data_buf.length-payload_len);
+                return new ICMP6(data_buf, data_buf.length - payload_len);
             case 0x06:
-                return new TCP(data_buf, data_buf.length-payload_len);
+                return new TCP(data_buf, data_buf.length - payload_len);
             case 0x11:
-                nextLayer = new UDP(data_buf, data_buf.length-payload_len);
+                nextLayer = new UDP(data_buf, data_buf.length - payload_len);
             default:
                 return null;
         }
     }
 
     public String field(int id) {
-        assert(data_buf != null);
+        assert (data_buf != null);
         switch (id) {
             case VERSION:
                 return Integer.toString(data_buf[start] >>> 4);
             case TRAFFI_CLASS:
                 return String.format("0x%02x", (Utils.bytes2Short(data_buf, start) >>> 4) & 0xFF);
             case FLOW_LABEL:
-                return String.format("0x%05x", (data_buf[start+1] >>> 4) << 16 + Utils.bytes2Short(data_buf, start+2));
+                return String.format("0x%05x", (data_buf[start + 1] >>> 4) << 16 + Utils.bytes2Short(data_buf, start + 2));
             case PAYLOAD_LENGTH:
-                return Short.toString(Utils.bytes2Short(data_buf, start+4));
+                return Short.toString(Utils.bytes2Short(data_buf, start + 4));
             case NEXT_HEADER:
-                return Byte.toString(data_buf[start+6]);
+                return Byte.toString(data_buf[start + 6]);
             case HOP_LIMIT:
-                return Byte.toString(data_buf[start+7]);
+                return Byte.toString(data_buf[start + 7]);
             case SRC_ADDR:
-                return Utils.bytes2IPv6(data_buf, start+8);
+                return Utils.bytes2IPv6(data_buf, start + 8);
             case DST_ADDR:
-                return Utils.bytes2IPv6(data_buf, start+24);
+                return Utils.bytes2IPv6(data_buf, start + 24);
             default:
                 return null;
         }
@@ -84,9 +85,9 @@ public class IPv6 extends Protocol {
         TEST.timer.start();
         Iterator<Protocol> iter = pcap.iterator();
         Protocol eth = iter.next();
-        if(eth instanceof Ethernet) {
+        if (eth instanceof Ethernet) {
             Protocol ipv6 = eth.next();
-            if(ipv6 instanceof IPv6) {
+            if (ipv6 instanceof IPv6) {
                 System.out.println("VERSION: " + ipv6.field(IPv6.VERSION));
                 System.out.println("TRAFFI CLASS: " + ipv6.field(IPv6.TRAFFI_CLASS));
                 System.out.println("FLOW LABEL: " + ipv6.field(IPv6.FLOW_LABEL));

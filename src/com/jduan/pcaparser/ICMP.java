@@ -1,4 +1,5 @@
 package com.jduan.pcaparser;
+
 import java.util.Iterator;
 
 
@@ -18,14 +19,14 @@ public class ICMP extends Protocol {
     }
 
     public String field(int id) {
-        assert(data_buf != null);
+        assert (data_buf != null);
         switch (id) {
             case TYPE:
                 return Byte.toString(data_buf[start]);
             case CODE:
-                return Byte.toString(data_buf[start+1]);
+                return Byte.toString(data_buf[start + 1]);
             case CHECKSUM:
-                return Utils.bytes2Hex(data_buf, start+2, 2);
+                return Utils.bytes2Hex(data_buf, start + 2, 2);
             default:
                 return null;
         }
@@ -51,11 +52,11 @@ public class ICMP extends Protocol {
         TEST.timer.start();
         Iterator<Protocol> iter = pcap.iterator();
         Protocol eth = iter.next();
-        if(eth instanceof Ethernet) {
+        if (eth instanceof Ethernet) {
             Protocol ip = eth.next();
-            if(ip instanceof IPv4) {
+            if (ip instanceof IPv4) {
                 Protocol icmp = ip.next();
-                if(icmp instanceof ICMP) {
+                if (icmp instanceof ICMP) {
                     System.out.println("TYPE: " + icmp.field(ICMP.TYPE));
                     System.out.println("CODE: " + icmp.field(ICMP.CODE));
                     System.out.println("CHECKSUM: " + icmp.field(ICMP.CHECKSUM));

@@ -11,20 +11,20 @@ public class ICMP6 extends Protocol {
     private int start;
 
     ICMP6(byte[] __buf, int __start) {
-        assert(__buf != null);
+        assert (__buf != null);
         data_buf = __buf;
         start = __start;
     }
 
     public String field(int id) {
-        assert(data_buf != null);
+        assert (data_buf != null);
         switch (id) {
             case TYPE:
                 return Integer.toString(data_buf[start] & 0xFF);
             case CODE:
-                return Integer.toString(data_buf[start+1] & 0xFF);
+                return Integer.toString(data_buf[start + 1] & 0xFF);
             case CHECKSUM:
-                return Utils.bytes2Hex(data_buf, start+2, 2);
+                return Utils.bytes2Hex(data_buf, start + 2, 2);
             default:
                 return null;
         }
@@ -50,13 +50,13 @@ public class ICMP6 extends Protocol {
         TEST.timer.start();
         Iterator<Protocol> iter = pcap.iterator();
         Protocol eth = iter.next();
-        if(eth instanceof Ethernet) {
+        if (eth instanceof Ethernet) {
             Protocol ip4 = eth.next();
-            if(ip4 instanceof IPv4) {
+            if (ip4 instanceof IPv4) {
                 Protocol ip6 = ip4.next();
-                if(ip6 instanceof IPv6) {
+                if (ip6 instanceof IPv6) {
                     Protocol icmp6 = ip6.next();
-                    if(icmp6 instanceof ICMP6) {
+                    if (icmp6 instanceof ICMP6) {
                         System.out.println("TYPE: " + icmp6.field(ICMP.TYPE));
                         System.out.println("CODE: " + icmp6.field(ICMP.CODE));
                         System.out.println("CHECKSUM: " + icmp6.field(ICMP.CHECKSUM));

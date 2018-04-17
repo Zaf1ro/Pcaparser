@@ -1,4 +1,5 @@
 package com.jduan.pcaparser;
+
 import java.util.Iterator;
 
 
@@ -24,24 +25,24 @@ public class OSPF extends Protocol {
     }
 
     public String field(int id) {
-        assert(data_buf != null);
+        assert (data_buf != null);
         switch (id) {
             case VERSION:
                 return Byte.toString(data_buf[start]);
             case TYPE:
-                return Byte.toString(data_buf[start+1]);
+                return Byte.toString(data_buf[start + 1]);
             case PACKET_LENGTH:
-                return Short.toString(Utils.bytes2Short(data_buf, start+2));
+                return Short.toString(Utils.bytes2Short(data_buf, start + 2));
             case ROUTER_ID:
-                return Utils.bytes2IPv4(data_buf, start+4);
+                return Utils.bytes2IPv4(data_buf, start + 4);
             case AREA_ID:
-                return Utils.bytes2IPv4(data_buf, start+8);
+                return Utils.bytes2IPv4(data_buf, start + 8);
             case CHECKSUM:
-                return String.format("0x%02x", Utils.bytes2Short(data_buf, start+12));
+                return String.format("0x%02x", Utils.bytes2Short(data_buf, start + 12));
             case AUTYPE:
-                return Short.toString(Utils.bytes2Short(data_buf, start+14));
+                return Short.toString(Utils.bytes2Short(data_buf, start + 14));
             case AUTHENTICATION:
-                return Utils.bytes2Hex(data_buf, start+16, 8);
+                return Utils.bytes2Hex(data_buf, start + 16, 8);
             default:
                 return null;
         }
@@ -67,11 +68,11 @@ public class OSPF extends Protocol {
         TEST.timer.start();
         Iterator<Protocol> iter = pcap.iterator();
         Protocol eth = iter.next();
-        if(eth instanceof Ethernet) {
+        if (eth instanceof Ethernet) {
             Protocol ip = eth.next();
-            if(ip instanceof IPv4) {
+            if (ip instanceof IPv4) {
                 Protocol ospf = ip.next();
-                if(ospf instanceof OSPF) {
+                if (ospf instanceof OSPF) {
                     System.out.println("VERSION: " + ospf.field(OSPF.VERSION));
                     System.out.println("TYPE: " + ospf.field(OSPF.TYPE));
                     System.out.println("PACKET_LENGTH: " + ospf.field(OSPF.PACKET_LENGTH));

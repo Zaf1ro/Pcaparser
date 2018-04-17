@@ -1,4 +1,5 @@
 package com.jduan.pcaparser;
+
 import java.util.Iterator;
 
 
@@ -65,7 +66,7 @@ public final class Ethernet extends Protocol {
         TEST.timer.start();
         Iterator<Protocol> iter = pcap.iterator();
         Protocol eth = iter.next();
-        if(eth instanceof Ethernet) {
+        if (eth instanceof Ethernet) {
             System.out.println("DHOST: " + eth.field(Ethernet.DHOST));
             System.out.println("SHOST: " + eth.field(Ethernet.SHOST));
             System.out.println("ETH_TYPE: " + eth.field(Ethernet.ETH_TYPE));

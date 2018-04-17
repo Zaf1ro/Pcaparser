@@ -1,4 +1,5 @@
 package com.jduan.pcaparser;
+
 import java.util.Iterator;
 
 
@@ -17,12 +18,12 @@ public class ESP extends Protocol {
     }
 
     public String field(int id) {
-        assert(data_buf != null);
+        assert (data_buf != null);
         switch (id) {
             case SPI:
                 return Utils.bytes2Hex(data_buf, start, 4);
             case SEQUENCE:
-                return Integer.toString(Utils.bytes2Int(data_buf, start+4));
+                return Integer.toString(Utils.bytes2Int(data_buf, start + 4));
             default:
                 return null;
         }
@@ -48,11 +49,11 @@ public class ESP extends Protocol {
         TEST.timer.start();
         Iterator<Protocol> iter = pcap.iterator();
         Protocol eth = iter.next();
-        if(eth instanceof Ethernet) {
+        if (eth instanceof Ethernet) {
             Protocol ip = eth.next();
-            if(ip instanceof IPv4) {
+            if (ip instanceof IPv4) {
                 Protocol esp = ip.next();
-                if(esp instanceof ESP) {
+                if (esp instanceof ESP) {
                     System.out.println("SPI: " + esp.field(ESP.SPI));
                     System.out.println("SEQUENCE: " + esp.field(ESP.SEQUENCE));
                 }

@@ -11,7 +11,7 @@ class PktHdr extends Protocol {
     private final static int PKTHDR_LEN = 16;
 
     PktHdr() {
-        assert(Pcap.reader != null);
+        assert (Pcap.reader != null);
         data_buf = new byte[PKTHDR_LEN];
         Pcap.reader.fill(data_buf);
     }
