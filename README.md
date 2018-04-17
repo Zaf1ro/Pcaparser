@@ -15,6 +15,7 @@
 3. transport
     * TCP
     * UDP
+    * SCTP
 4. application
 </br>
 
@@ -22,7 +23,6 @@
 1. datalink
 2. network
 3. Transport layer
-    * SCTP
 4. Application layer
     * BGP 
     * DHCP 
