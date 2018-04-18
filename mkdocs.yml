@@ -3,7 +3,7 @@ repo_url: https://github.com/Zaf1ro/Pcaparser
 repo_name: 'GitHub'
 site_author: Jason Duan
 pages:
-- Introduction: intro.md
+- Introduction: index.md
 - Example:
   - 'Print Pcap Header Example': 'example/pcap.md'
   - 'Print Ethernet Example': 'example/eth.md'
