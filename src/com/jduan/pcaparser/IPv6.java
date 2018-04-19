@@ -22,7 +22,7 @@ public class IPv6 extends Protocol {
         assert (__buf != null);
         data_buf = __buf;
         start = __start;
-        payload_len = Utils.bytes2Short(data_buf, start + 4);
+        payload_len = Utils.bBytes2Short(data_buf, start + 4);
         IPv6_LEN = data_buf.length - payload_len - start;
         nextLayer = link();
     }
@@ -47,11 +47,11 @@ public class IPv6 extends Protocol {
             case VERSION:
                 return Integer.toString(data_buf[start] >>> 4);
             case TRAFFI_CLASS:
-                return String.format("0x%02x", (Utils.bytes2Short(data_buf, start) >>> 4) & 0xFF);
+                return String.format("0x%02x", (Utils.bBytes2Short(data_buf, start) >>> 4) & 0xFF);
             case FLOW_LABEL:
-                return String.format("0x%05x", (data_buf[start + 1] >>> 4) << 16 + Utils.bytes2Short(data_buf, start + 2));
+                return String.format("0x%05x", (data_buf[start + 1] >>> 4) << 16 + Utils.bBytes2Short(data_buf, start + 2));
             case PAYLOAD_LENGTH:
-                return Short.toString(Utils.bytes2Short(data_buf, start + 4));
+                return Short.toString(Utils.bBytes2Short(data_buf, start + 4));
             case NEXT_HEADER:
                 return Byte.toString(data_buf[start + 6]);
             case HOP_LIMIT:

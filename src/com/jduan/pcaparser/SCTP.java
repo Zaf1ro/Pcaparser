@@ -28,9 +28,9 @@ public class SCTP extends Protocol {
         assert (data_buf != null);
         switch (id) {
             case SPORT:
-                return Short.toString(Utils.bytes2Short(data_buf, start));
+                return Short.toString(Utils.bBytes2Short(data_buf, start));
             case DPORT:
-                return Short.toString(Utils.bytes2Short(data_buf, start + 2));
+                return Short.toString(Utils.bBytes2Short(data_buf, start + 2));
             case TAG:
                 return Utils.bytes2Hex(data_buf, start + 4, 4);
             case CHECKSUM:

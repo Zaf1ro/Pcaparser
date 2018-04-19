@@ -2,6 +2,7 @@ package com.jduan.pcaparser;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.ByteOrder;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 
@@ -80,6 +81,7 @@ public class Reader {
         } catch (IOException e) {
             throw new PcapIOException("Cant read the file at: ", offset);
         }
+        zBuffer.order(ByteOrder.LITTLE_ENDIAN);
         return zBuffer;
     }
 

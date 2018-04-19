@@ -27,7 +27,7 @@ public class ARP extends Protocol {
     public String field(int id) {
         switch (id) {
             case HTYPE:
-                return Short.toString(Utils.bytes2Short(data_buf, start));
+                return Short.toString(Utils.bBytes2Short(data_buf, start));
             case PTYPE:
                 return Utils.bytes2Hex(data_buf, start + 2, 2);
             case HLEN:
@@ -35,7 +35,7 @@ public class ARP extends Protocol {
             case PLEN:
                 return Byte.toString(data_buf[start + 5]);
             case OPERATION:
-                return Short.toString(Utils.bytes2Short(data_buf, start + 6));
+                return Short.toString(Utils.bBytes2Short(data_buf, start + 6));
             case SHA:
                 return Utils.bytes2MAC(data_buf, start + 8);
             case SPA:

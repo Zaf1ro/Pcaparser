@@ -23,7 +23,7 @@ public class ESP extends Protocol {
             case SPI:
                 return Utils.bytes2Hex(data_buf, start, 4);
             case SEQUENCE:
-                return Integer.toString(Utils.bytes2Int(data_buf, start + 4));
+                return Integer.toString(Utils.bBytes2Int(data_buf, start + 4));
             default:
                 return null;
         }

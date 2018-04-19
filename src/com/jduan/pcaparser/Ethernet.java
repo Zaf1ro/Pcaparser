@@ -20,7 +20,7 @@ public final class Ethernet extends Protocol {
     }
 
     private Protocol link() {
-        int type = Utils.bytes2Short(data_buf, 12) & 0xFFFF;
+        int type = Utils.bBytes2Short(data_buf, 12) & 0xFFFF;
         switch (type) {
             case 0x0800:
                 return new IPv4(data_buf, ETH_LEN);
@@ -40,7 +40,7 @@ public final class Ethernet extends Protocol {
             case SHOST:
                 return Utils.bytes2MAC(data_buf, 6);
             case ETH_TYPE:
-                return String.format("0x%04x", Utils.bytes2Short(data_buf, 12));
+                return String.format("0x%04x", Utils.bBytes2Short(data_buf, 12));
             default:
                 return pktHdr.field(id);
         }

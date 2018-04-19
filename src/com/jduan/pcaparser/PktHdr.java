@@ -17,19 +17,19 @@ class PktHdr extends Protocol {
     }
 
     int getDataLen() {
-        return Utils.bytes2Int(data_buf, 12) & 0xFFFF;
+        return Utils.lBytes2Int(data_buf, 12);
     }
 
     public String field(int field) {
         switch (field) {
             case TS_SEC:
-                return Integer.toString(Utils.bytes2Int(data_buf, 0));
+                return Integer.toString(Utils.bBytes2Int(data_buf, 0));
             case TS_USEC:
-                return Integer.toString(Utils.bytes2Int(data_buf, 4));
+                return Integer.toString(Utils.bBytes2Int(data_buf, 4));
             case INCL_LEN:
-                return Integer.toString(Utils.bytes2Int(data_buf, 8));
+                return Integer.toString(Utils.bBytes2Int(data_buf, 8));
             case ORIG_LEN:
-                return Integer.toString(Utils.bytes2Int(data_buf, 12));
+                return Integer.toString(Utils.bBytes2Int(data_buf, 12));
             default:
                 return null;
         }

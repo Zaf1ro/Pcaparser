@@ -24,9 +24,9 @@ public final class IEEE80211 extends Protocol {
     public String field(int id) {
         switch (id) {
             case FRAME_CONTROL:
-                return String.format("0x%04x", Utils.bytes2Short(data_buf, 0));
+                return String.format("0x%04x", Utils.bBytes2Short(data_buf, 0));
             case DURATION:
-                return Short.toString(Utils.bytes2Short(data_buf, 2));
+                return Short.toString(Utils.bBytes2Short(data_buf, 2));
             case ADDR1:
                 return Utils.bytes2MAC(data_buf, 4);
             case ADDR2:
@@ -34,7 +34,7 @@ public final class IEEE80211 extends Protocol {
             case ADDR3:
                 return Utils.bytes2MAC(data_buf, 16);
             case SEQUENCE:
-                return String.format("0x%04x", Utils.bytes2Short(data_buf, 22));
+                return String.format("0x%04x", Utils.bBytes2Short(data_buf, 22));
             default:
                 return pktHdr.field(id);
         }

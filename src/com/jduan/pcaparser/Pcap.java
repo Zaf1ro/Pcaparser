@@ -43,17 +43,17 @@ public class Pcap {
             case MAGIC:
                 return Utils.bytes2Hex(pcapHdr_buf, 0, 4);
             case V_MAJOR:
-                return Short.toString(Utils.bytes2Short(pcapHdr_buf, 4));
+                return Short.toString(Utils.lBytes2Short(pcapHdr_buf, 4));
             case V_MINOR:
-                return Short.toString(Utils.bytes2Short(pcapHdr_buf, 6));
+                return Short.toString(Utils.lBytes2Short(pcapHdr_buf, 6));
             case THISZONE:
-                return Integer.toString(Utils.bytes2Int(pcapHdr_buf, 8));
+                return Integer.toString(Utils.lBytes2Int(pcapHdr_buf, 8));
             case SIGFIGS:
-                return Integer.toString(Utils.bytes2Int(pcapHdr_buf, 12));
+                return Integer.toString(Utils.lBytes2Int(pcapHdr_buf, 12));
             case SNAPLEN:
-                return Integer.toString(Utils.bytes2Int(pcapHdr_buf, 16));
+                return Integer.toString(Utils.lBytes2Int(pcapHdr_buf, 16));
             case LINKTYPE:
-                return Integer.toString(Utils.bytes2Int(pcapHdr_buf, 20));
+                return Integer.toString(Utils.lBytes2Int(pcapHdr_buf, 20));
             default:
                 return null;
         }
@@ -135,7 +135,7 @@ public class Pcap {
         Pcap.reader.fill(pcapHdr_buf);
 
         /* check datalink type */
-        int linktype = Utils.bytes2Int(pcapHdr_buf, 20);
+        int linktype = Utils.lBytes2Int(pcapHdr_buf, 20);
         Class cDatalink = null;
         switch (linktype) {
             case DLT_EN10MB:

@@ -32,15 +32,15 @@ public class OSPF extends Protocol {
             case TYPE:
                 return Byte.toString(data_buf[start + 1]);
             case PACKET_LENGTH:
-                return Short.toString(Utils.bytes2Short(data_buf, start + 2));
+                return Short.toString(Utils.bBytes2Short(data_buf, start + 2));
             case ROUTER_ID:
                 return Utils.bytes2IPv4(data_buf, start + 4);
             case AREA_ID:
                 return Utils.bytes2IPv4(data_buf, start + 8);
             case CHECKSUM:
-                return String.format("0x%02x", Utils.bytes2Short(data_buf, start + 12));
+                return String.format("0x%02x", Utils.bBytes2Short(data_buf, start + 12));
             case AUTYPE:
-                return Short.toString(Utils.bytes2Short(data_buf, start + 14));
+                return Short.toString(Utils.bBytes2Short(data_buf, start + 14));
             case AUTHENTICATION:
                 return Utils.bytes2Hex(data_buf, start + 16, 8);
             default:

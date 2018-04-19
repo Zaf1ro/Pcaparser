@@ -65,19 +65,19 @@ public final class IPv4 extends Protocol {
             case ECN:
                 return Integer.toString(data_buf[start + 1] & 0x03);
             case TOTAL_LENGTH:
-                return Short.toString(Utils.bytes2Short(data_buf, start + 2));
+                return Short.toString(Utils.bBytes2Short(data_buf, start + 2));
             case IDENTIFICATION:
-                return String.format("0x%04x", Utils.bytes2Short(data_buf, start + 4));
+                return String.format("0x%04x", Utils.bBytes2Short(data_buf, start + 4));
             case FLAGS:
                 return String.format("0x%02x", (data_buf[start + 6] >>> 5) & 0x7);
             case FRAGMENT_OFFSET:
-                return Integer.toString(Utils.bytes2Short(data_buf, start + 6) & 0x1FFF);
+                return Integer.toString(Utils.bBytes2Short(data_buf, start + 6) & 0x1FFF);
             case TTL:
                 return Byte.toString(data_buf[start + 8]);
             case PROTOCOL:
                 return Byte.toString(data_buf[start + 9]);
             case CHECKSUM:
-                return String.format("0x%04x", Utils.bytes2Short(data_buf, start + 10));
+                return String.format("0x%04x", Utils.bBytes2Short(data_buf, start + 10));
             case SRC_ADDR:
                 return Utils.bytes2IPv4(data_buf, start + 12);
             case DST_ADDR:

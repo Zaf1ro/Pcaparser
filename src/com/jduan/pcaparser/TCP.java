@@ -39,9 +39,9 @@ public class TCP extends Protocol {
 
         switch (id) {
             case SPORT:
-                return Short.toString(Utils.bytes2Short(data_buf, start));
+                return Short.toString(Utils.bBytes2Short(data_buf, start));
             case DPORT:
-                return Short.toString(Utils.bytes2Short(data_buf, start + 2));
+                return Short.toString(Utils.bBytes2Short(data_buf, start + 2));
             case SEQ:
                 return Utils.bytes2Hex(data_buf, start + 4, 4);
             case ACK:
@@ -49,13 +49,13 @@ public class TCP extends Protocol {
             case OFFSET:
                 return Integer.toString((data_buf[start + 12] >>> 4) & 0x0F);
             case FLAGS:
-                return String.format("0x%04x", Utils.bytes2Short(data_buf, start + 12) & 0x01FF);
+                return String.format("0x%04x", Utils.bBytes2Short(data_buf, start + 12) & 0x01FF);
             case WINDOW:
-                return Integer.toString(Utils.bytes2Short(data_buf, start + 14) & 0xFFFF);
+                return Integer.toString(Utils.bBytes2Short(data_buf, start + 14) & 0xFFFF);
             case CHECKSUM:
                 return Utils.bytes2Hex(data_buf, start + 16, 2);
             case URP:
-                return Short.toString(Utils.bytes2Short(data_buf, start + 18));
+                return Short.toString(Utils.bBytes2Short(data_buf, start + 18));
             default:
                 return null;
         }

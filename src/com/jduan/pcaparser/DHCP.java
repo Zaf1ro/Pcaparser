@@ -52,7 +52,7 @@ public class DHCP extends Protocol {
             case XID:
                 return Utils.bytes2Hex(data_buf, start+4, 4);
             case SECS:
-                return Short.toString(Utils.bytes2Short(data_buf, start+8));
+                return Short.toString(Utils.bBytes2Short(data_buf, start+8));
             case FLAGS:
                 return Utils.bytes2Hex(data_buf, start+10, 2);
             case CIADDR:
