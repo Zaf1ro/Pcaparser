@@ -14,18 +14,20 @@ public class UDP extends Protocol {
     private int start;
 
     UDP(byte[] __buf, int __start) {
-        assert (__buf != null);
+        assert(__buf != null);
         data_buf = __buf;
         start = __start;
         nextLayer = link();
     }
 
     private Protocol link() {
-        int sport = Utils.bytes2Short(data_buf, start + 2) & 0xFFFF;
+        int sport = Utils.bBytes2Short(data_buf, start + 2) & 0x0000FFFF;
         switch (sport) {
             case 67:
             case 68:
                 return new DHCP(data_buf, start+UDP_LEN);
+            case 520:
+                return new RIP(data_buf, start+UDP_LEN);
             default:
                 return null;
         }
@@ -35,11 +37,11 @@ public class UDP extends Protocol {
         assert (data_buf != null);
         switch (id) {
             case SPORT:
-                return Short.toString(Utils.bytes2Short(data_buf, start));
+                return Short.toString(Utils.bBytes2Short(data_buf, start));
             case DPORT:
-                return Short.toString(Utils.bytes2Short(data_buf, start + 2));
+                return Short.toString(Utils.bBytes2Short(data_buf, start + 2));
             case LENGTH:
-                return Short.toString(Utils.bytes2Short(data_buf, start + 4));
+                return Short.toString(Utils.bBytes2Short(data_buf, start + 4));
             case CHECKSUM:
                 return Utils.bytes2Hex(data_buf, start + 6, 2);
             default:
