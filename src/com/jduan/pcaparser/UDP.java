@@ -21,12 +21,18 @@ public class UDP extends Protocol {
     }
 
     private Protocol link() {
-        return null;
+        int sport = Utils.bytes2Short(data_buf, start + 2) & 0xFFFF;
+        switch (sport) {
+            case 67:
+            case 68:
+                return new DHCP(data_buf, start+UDP_LEN);
+            default:
+                return null;
+        }
     }
 
     public String field(int id) {
         assert (data_buf != null);
-
         switch (id) {
             case SPORT:
                 return Short.toString(Utils.bytes2Short(data_buf, start));
