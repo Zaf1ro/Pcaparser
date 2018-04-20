@@ -23,11 +23,15 @@ public class UDP extends Protocol {
     private Protocol link() {
         int sport = Utils.bBytes2Short(data_buf, start + 2) & 0x0000FFFF;
         switch (sport) {
+            case 53:
+                return new DNS(data_buf, start+UDP_LEN);
             case 67:
             case 68:
                 return new DHCP(data_buf, start+UDP_LEN);
             case 520:
                 return new RIP(data_buf, start+UDP_LEN);
+            case 5004:
+                return new RTP(data_buf, start+UDP_LEN);
             default:
                 return null;
         }
