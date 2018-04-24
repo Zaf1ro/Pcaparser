@@ -44,6 +44,8 @@ public final class IPv4 extends Protocol {
                 return new IPv6(data_buf, start + IPv4_LEN);
             case 0x32:
                 return new ESP(data_buf, start + IPv4_LEN);
+            case 0x33:
+                return new AH(data_buf, start + IPv4_LEN);
             case 0x84:
                 return new SCTP(data_buf, start + IPv4_LEN);
             case 0x59:

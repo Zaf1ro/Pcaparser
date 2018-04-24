@@ -29,3 +29,4 @@ hs_err_pid*
 /.idea
 Pcaparser.iml
 Test
+src/META-INF/MANIFEST.MF

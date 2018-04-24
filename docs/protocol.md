@@ -15,6 +15,7 @@
 * RIP
 * DNS 
 * RTP
+* AH
 <br/><br/>
 
 # Future plans
@@ -27,7 +28,6 @@
 * SIP 
 * SMTP 
 * SNMP 
-* SSH 
 * Telnet 
 * TLS/SSL 
 * XMPP
