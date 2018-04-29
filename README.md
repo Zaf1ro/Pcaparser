@@ -31,7 +31,7 @@ http://pcaparser.readthedocs.io
 <br /><br />
 
 ## ABOUT
-This code is based on TCP/IP, written, maintained and improved by Jason Duan. And it's being  by me.
+This code is based on TCP/IP, written, maintained and improved by Jason Duan.
 <br /><br />
 
 ## LICENSE
