@@ -26,6 +26,8 @@ hs_err_pid*
 /site
 
 #idea
+.DS_Store
+.gradle
 /.idea
 Pcaparser.iml
 Test
