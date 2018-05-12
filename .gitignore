@@ -30,5 +30,3 @@ hs_err_pid*
 .gradle
 /.idea
 Pcaparser.iml
-Test
-src/META-INF/MANIFEST.MF
