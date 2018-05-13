@@ -23,7 +23,7 @@ final class PktHdr_Test {
         pcap = new Pcap(PktHdr_Test.class.getResource("/ipv4.pcap").getPath());
         assertNotNull(pcap);
         pcap.unpack();
-        timer.end("PktHdr_Test Unpack Time-consuming");
+        timer.end("PktHdr test case unpack time-consuming");
     }
 
     @AfterAll
