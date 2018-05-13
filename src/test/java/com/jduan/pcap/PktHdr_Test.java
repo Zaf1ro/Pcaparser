@@ -4,24 +4,26 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 /**
+ * This class is used for testing Class PktHdr.
  *
  * @author  Jiaxu Duan
  * @since   5/12/18
- * @see     com.jduan.pcap.Protocol
  */
-public class PcapTest {
+class PktHdr_Test {
     private final static Timer timer = new Timer();
     private static Pcap pcap;
 
     @BeforeAll
     static void start() {
         timer.start();
-        pcap = new Pcap(PcapTest.class.getResource("/ipv4.pcap").getPath());
+        pcap = new Pcap(PktHdr_Test.class.getResource("/ipv4.pcap").getPath());
+        assertNotNull(pcap);
         pcap.unpack();
-        timer.end("PcapTest Unpack Time-consuming");
+        timer.end("PktHdr_Test Unpack Time-consuming");
     }
 
     @AfterAll
