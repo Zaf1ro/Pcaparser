@@ -22,7 +22,7 @@ class DHCP_Test {
     @BeforeAll
     static void start() {
         timer.start();
-        Pcap pcap = new Pcap(AH_Test.class.getResource("/dhcp.pcap").getPath());
+        Pcap pcap = new Pcap(DHCP_Test.class.getResource("/dhcp.pcap").getPath());
         pcap.unpack();
 
         Iterator<Protocol> iter = pcap.iterator();

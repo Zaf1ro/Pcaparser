@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @author  Jiaxu Duan
  * @since   5/12/18
  */
-class PktHdr_Test {
+final class PktHdr_Test {
     private final static Timer timer = new Timer();
     private static Pcap pcap;
 

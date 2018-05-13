@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @since   5/12/18
  * @see     com.jduan.pcap.Protocol
  */
-class ARP_Test {
+final class ARP_Test {
     private final static Timer timer = new Timer();
     private static Protocol arp;
 

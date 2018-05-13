@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @since   5/12/18
  * @see     com.jduan.pcap.Protocol
  */
-public class AH_Test {
+final public class AH_Test {
     private final static Timer timer = new Timer();
     private static Protocol ah;
 
