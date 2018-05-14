@@ -34,7 +34,7 @@ final class DNS_Test {
         assertTrue(udp instanceof UDP);
         dns = udp.next();
         assertTrue(dns instanceof DNS);
-        timer.end("AH_Test Unpack Time-consuming");
+        timer.end("DNS test case unpack time-consuming");
     }
 
     @AfterAll

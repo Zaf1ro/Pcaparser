@@ -33,7 +33,7 @@ final public class AH_Test {
         assertTrue(ipv4 instanceof IPv4);
         ah = ipv4.next();
         assertTrue(ah instanceof AH);
-        timer.end("AH_Test Unpack Time-consuming");
+        timer.end("AH test case unpack time-consuming");
     }
 
     @AfterAll

@@ -34,7 +34,7 @@ class DHCP_Test {
         assertTrue(udp instanceof UDP);
         dhcp = udp.next();
         assertTrue(dhcp instanceof DHCP);
-        timer.end("AH_Test Unpack Time-consuming");
+        timer.end("DHCP test case unpack time-consuming");
     }
 
     @AfterAll

@@ -10,25 +10,25 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 /**
- * This class is used for testing Class Ethernet.
+ * This class is used for testing Class IEEE 802.3.
  *
- * @author  Jiaxu Duan
- * @since   5/12/18
+ * @author Jiaxu Duan
+ * @since 5/13/18
  */
-final class Ethernet_Test {
+final class IEEE8023_Test {
     private final static Timer timer = new Timer();
     private static Protocol eth;
 
     @BeforeAll
     static void start() {
         timer.start();
-        Pcap pcap = new Pcap(Ethernet_Test.class.getResource("/eth.pcap").getPath());
+        Pcap pcap = new Pcap(EthernetII_Test.class.getResource("/llc.pcap").getPath());
         pcap.unpack();
 
         Iterator<Protocol> iter = pcap.iterator();
         eth = iter.next();
         assertTrue(eth instanceof Ethernet);
-        timer.end("Ethernet test case unpack time-consuming");
+        timer.end("IEEE 802.3 test case unpack time-consuming");
     }
 
     @AfterAll
@@ -39,18 +39,18 @@ final class Ethernet_Test {
     @Test
     @DisplayName("Test 'DHOST' field")
     void DHOST_test() {
-        assertEquals(eth.field(Ethernet.DHOST), "00:26:62:2f:47:87");
+        assertEquals(eth.field(IEEE8023.DHOST), "01:00:0c:cc:cc:cc");
     }
 
     @Test
     @DisplayName("Test 'SHOST' field")
     void SHOST_test() {
-        assertEquals(eth.field(Ethernet.SHOST), "00:1d:60:b3:01:84");
+        assertEquals(eth.field(IEEE8023.SHOST), "c4:02:32:6b:00:00");
     }
 
     @Test
-    @DisplayName("Test 'ETH_TYPE' field")
+    @DisplayName("Test 'LENGTH' field")
     void ETH_TYPE_test() {
-        assertEquals(eth.field(Ethernet.ETH_TYPE), "0x0800");
+        assertEquals(eth.field(IEEE8023.LENGTH), "340");
     }
 }
