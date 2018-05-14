@@ -18,7 +18,7 @@ public class Pcap {
     public final static int SNAPLEN = 6;    /* 32, max length pf captured protocols */
     public final static int LINKTYPE = 7;   /* 32, data line type */
 
-    private final static int DLT_EN10MB = 0x0001;       /* IEEE 802.3 Ethernet */
+    private final static int DLT_ETHERNET = 0x0001;     /* Ethernet -> EthernetII, IEEE802.3 */
     private final static int DLT_PPP = 0x0009;          /* Point-to-Point Protocol */
     private final static int DLT_IEEE802_11 = 0x0069;   /* IEEE 802.11 wireless LAN */
 
@@ -138,7 +138,7 @@ public class Pcap {
         int linktype = Utils.lBytes2Int(pcapHdr_buf, 20);
         Class cDatalink = null;
         switch (linktype) {
-            case DLT_EN10MB:
+            case DLT_ETHERNET:
                 cDatalink = Ethernet.class;
                 break;
             case DLT_PPP:

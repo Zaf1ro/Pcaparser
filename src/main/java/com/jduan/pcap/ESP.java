@@ -1,9 +1,15 @@
 package com.jduan.pcap;
 
-import java.util.Iterator;
 
-
-/* https://en.wikipedia.org/wiki/IPsec#Encapsulating_Security_Payload */
+/**
+ * Parsing ESP protocol. This class provides an API compatible
+ * with {@link Protocol}. For more information of ESP protocol,
+ * see en.wikipedia.org/wiki/IPsec#Encapsulating_Security_Payload
+ *
+ * @author  Jiaxu Duan
+ * @since   5/12/18
+ * @see     com.jduan.pcap.Protocol
+ */
 public class ESP extends Protocol {
     public final static int SPI = 0;        /* 4, Security Parameters Index */
     public final static int SEQUENCE = 1;   /* 4, A sequence number to protect against replay attacks */
@@ -17,6 +23,7 @@ public class ESP extends Protocol {
         start = __start;
     }
 
+    @Override
     public String field(int id) {
         assert (data_buf != null);
         switch (id) {
@@ -29,31 +36,16 @@ public class ESP extends Protocol {
         }
     }
 
+    @Override
     public String type() {
         return "ESP";
     }
 
+    @Override
     public String text() {
         return String.format("ESP:\t SPI:%s, SEQ:%s",
                 field(ESP.SPI),
                 field(ESP.SEQUENCE)
         );
-    }
-
-    public static void main(String[] args) {
-        Pcap pcap = new Pcap("ipsec.pcap");
-        pcap.unpack();
-        Iterator<Protocol> iter = pcap.iterator();
-        Protocol eth = iter.next();
-        if (eth instanceof Ethernet) {
-            Protocol ip = eth.next();
-            if (ip instanceof IPv4) {
-                Protocol esp = ip.next();
-                if (esp instanceof ESP) {
-                    System.out.println("SPI: " + esp.field(ESP.SPI));
-                    System.out.println("SEQUENCE: " + esp.field(ESP.SEQUENCE));
-                }
-            }
-        }
     }
 }

@@ -1,9 +1,15 @@
 package com.jduan.pcap;
 
-import java.util.Iterator;
 
-
-/* https://witestlab.poly.edu/blog/802-11-wireless-lan-2/ */
+/**
+ * Parsing IEEE80211 protocol. This class provides an API compatible
+ * with {@link Protocol}. For more information of IEEE80211 protocol,
+ * see https://witestlab.poly.edu/blog/802-11-wireless-lan-2/
+ *
+ * @author  Jiaxu Duan
+ * @since   5/12/18
+ * @see     com.jduan.pcap.Protocol
+ */
 public final class IEEE80211 extends Protocol {
     public final static int FRAME_CONTROL = 1;  /* 2, public final static int */
     public final static int DURATION = 2;       /* 2, microseconds to reserve link */
@@ -21,6 +27,7 @@ public final class IEEE80211 extends Protocol {
         Pcap.reader.fill(data_buf);
     }
 
+    @Override
     public String field(int id) {
         switch (id) {
             case FRAME_CONTROL:
@@ -40,31 +47,17 @@ public final class IEEE80211 extends Protocol {
         }
     }
 
+    @Override
     public String type() {
         return "IEEE802.11";
     }
 
+    @Override
     public String text() {
         return String.format("Ethernet:\t ADDR1:%s, ADDR2:%s, ADDR3:%s",
                 field(IEEE80211.ADDR1),
                 field(IEEE80211.ADDR2),
                 field(IEEE80211.ADDR3)
         );
-    }
-
-    public static void main(String[] args) {
-        Pcap pcap = new Pcap("ieee802_11.pcap");
-        pcap.unpack();
-
-        Iterator<Protocol> iter = pcap.iterator();
-        Protocol ieee802_11 = iter.next();
-        if (ieee802_11 instanceof IEEE80211) {
-            System.out.println("FRAME_CONTROL: " + ieee802_11.field(IEEE80211.FRAME_CONTROL));
-            System.out.println("DURATION: " + ieee802_11.field(IEEE80211.DURATION));
-            System.out.println("ADDR1: " + ieee802_11.field(IEEE80211.ADDR1));
-            System.out.println("ADDR2: " + ieee802_11.field(IEEE80211.ADDR2));
-            System.out.println("ADDR3: " + ieee802_11.field(IEEE80211.ADDR3));
-            System.out.println("SEQUENCE: " + ieee802_11.field(IEEE80211.SEQUENCE));
-        }
     }
 }

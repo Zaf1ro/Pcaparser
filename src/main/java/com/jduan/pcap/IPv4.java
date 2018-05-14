@@ -1,10 +1,16 @@
 package com.jduan.pcap;
-
 import java.util.Arrays;
-import java.util.Iterator;
 
 
-/* https://en.wikipedia.org/wiki/IPv4#Header */
+/**
+ * Parsing IPv4 protocol. This class provides an API compatible
+ * with {@link Protocol}. For more information of IPv4 protocol,
+ * see https://en.wikipedia.org/wiki/IPv4#Header
+ *
+ * @author  Jiaxu Duan
+ * @since   5/12/18
+ * @see     com.jduan.pcap.Protocol
+ */
 public final class IPv4 extends Protocol {
     public final static int VERSION = 0;            /* 4b, version */
     public final static int IHL = 1;                /* 4b, internet Header Length */
@@ -55,6 +61,7 @@ public final class IPv4 extends Protocol {
         }
     }
 
+    @Override
     public String field(int id) {
         assert (data_buf != null);
         switch (id) {
@@ -92,41 +99,16 @@ public final class IPv4 extends Protocol {
         }
     }
 
+    @Override
     public String type() {
         return "IPv4";
     }
 
+    @Override
     public String text() {
         return String.format("IPv4:\t SRC IP:%s, DST IP:%s",
                 field(IPv4.SRC_ADDR),
                 field(IPv4.DST_ADDR)
         );
-    }
-
-    public static void main(String[] args) {
-        Pcap pcap = new Pcap("ipv4.pcap");
-        pcap.unpack();
-
-        Iterator<Protocol> iter = pcap.iterator();
-        Protocol eth = iter.next();
-        if (eth instanceof Ethernet) {
-            Protocol ipv4 = eth.next();
-            if (ipv4 instanceof IPv4) {
-                System.out.println("VERSION: " + ipv4.field(IPv4.VERSION));
-                System.out.println("IHL: " + ipv4.field(IPv4.IHL));
-                System.out.println("TOS: " + ipv4.field(IPv4.TOS));
-                System.out.println("ECN: " + ipv4.field(IPv4.ECN));
-                System.out.println("TOTAL LENGTH: " + ipv4.field(IPv4.TOTAL_LENGTH));
-                System.out.println("IDENTIFICATION: " + ipv4.field(IPv4.IDENTIFICATION));
-                System.out.println("FLAGS: " + ipv4.field(IPv4.FLAGS));
-                System.out.println("FRAGMENT OFFSET: " + ipv4.field(IPv4.FRAGMENT_OFFSET));
-                System.out.println("TTL: " + ipv4.field(IPv4.TTL));
-                System.out.println("PROTOCOL: " + ipv4.field(IPv4.PROTOCOL));
-                System.out.println("CHECKSUM: " + ipv4.field(IPv4.CHECKSUM));
-                System.out.println("SRC ADDR: " + ipv4.field(IPv4.SRC_ADDR));
-                System.out.println("DST ADDR: " + ipv4.field(IPv4.DST_ADDR));
-                System.out.println("OPTIONS: " + ipv4.field(IPv4.OPTIONS));
-            }
-        }
     }
 }

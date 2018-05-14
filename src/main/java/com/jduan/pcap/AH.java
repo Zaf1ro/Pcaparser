@@ -64,24 +64,4 @@ public final class AH extends Protocol {
                 field(AH.SEQUENCE)
         );
     }
-
-    public static void main(String[] args) {
-        Pcap pcap = new Pcap("ah.pcap");
-
-        Iterator<Protocol> iter = pcap.iterator();
-        Protocol eth = iter.next();
-        if (eth instanceof Ethernet) {
-            Protocol ipv4 = eth.next();
-            if (ipv4 instanceof IPv4) {
-                Protocol ah = ipv4.next();
-                if (ah instanceof AH) {
-                    System.out.println("NEXT: " + ah.field(AH.NEXT));
-                    System.out.println("LENGTH: " + ah.field(AH.LENGTH));
-                    System.out.println("SPI: " + ah.field(AH.SPI));
-                    System.out.println("SEQUENCE: " + ah.field(AH.SEQUENCE));
-                    System.out.println("ICV: " + ah.field(AH.ICV));
-                }
-            }
-        }
-    }
 }

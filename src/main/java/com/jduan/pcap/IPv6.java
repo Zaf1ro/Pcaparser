@@ -1,10 +1,16 @@
 package com.jduan.pcap;
 
-import java.util.Iterator;
 
-
-/* https://en.wikipedia.org/wiki/IPv6_packet */
-public class IPv6 extends Protocol {
+/**
+ * Parsing IPv6 protocol. This class provides an API compatible
+ * with {@link Protocol}. For more information of IPv6 protocol,
+ * see https://en.wikipedia.org/wiki/IPv6_packet
+ *
+ * @author  Jiaxu Duan
+ * @since   5/12/18
+ * @see     com.jduan.pcap.Protocol
+ */
+public final class IPv6 extends Protocol {
     public final static int VERSION = 1;           /* 4b, version */
     public final static int TRAFFI_CLASS = 2;      /* 1, hold two values: DS, ECN */
     public final static int FLOW_LABEL = 3;        /* 20b,  label a set of protocols belonging to a flow */
@@ -14,7 +20,6 @@ public class IPv6 extends Protocol {
     public final static int SRC_ADDR = 7;          /* 16, source address */
     public final static int DST_ADDR = 8;          /* 16, destination address */
 
-    private int IPv6_LEN;
     private int payload_len;
     private int start;
 
@@ -23,7 +28,6 @@ public class IPv6 extends Protocol {
         data_buf = __buf;
         start = __start;
         payload_len = Utils.bBytes2Short(data_buf, start + 4);
-        IPv6_LEN = data_buf.length - payload_len - start;
         nextLayer = link();
     }
 
@@ -41,6 +45,7 @@ public class IPv6 extends Protocol {
         }
     }
 
+    @Override
     public String field(int id) {
         assert (data_buf != null);
         switch (id) {
@@ -65,35 +70,16 @@ public class IPv6 extends Protocol {
         }
     }
 
+    @Override
     public String type() {
         return "IPv6";
     }
 
+    @Override
     public String text() {
         return String.format("IPv6:\t SRC IP:%s, DST IP:%s",
                 field(IPv6.SRC_ADDR),
                 field(IPv6.DST_ADDR)
         );
-    }
-
-    public static void main(String[] args) {
-        Pcap pcap = new Pcap("ipv6.pcap");
-        pcap.unpack();
-
-        Iterator<Protocol> iter = pcap.iterator();
-        Protocol eth = iter.next();
-        if (eth instanceof Ethernet) {
-            Protocol ipv6 = eth.next();
-            if (ipv6 instanceof IPv6) {
-                System.out.println("VERSION: " + ipv6.field(IPv6.VERSION));
-                System.out.println("TRAFFI CLASS: " + ipv6.field(IPv6.TRAFFI_CLASS));
-                System.out.println("FLOW LABEL: " + ipv6.field(IPv6.FLOW_LABEL));
-                System.out.println("PAYLOAD LENGTH: " + ipv6.field(IPv6.PAYLOAD_LENGTH));
-                System.out.println("NEXT HEADER: " + ipv6.field(IPv6.NEXT_HEADER));
-                System.out.println("HOP LIMIT: " + ipv6.field(IPv6.HOP_LIMIT));
-                System.out.println("SRC ADDR: " + ipv6.field(IPv6.SRC_ADDR));
-                System.out.println("DST ADDR: " + ipv6.field(IPv6.DST_ADDR));
-            }
-        }
     }
 }

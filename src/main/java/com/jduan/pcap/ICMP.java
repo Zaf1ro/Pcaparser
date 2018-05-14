@@ -1,10 +1,16 @@
 package com.jduan.pcap;
 
-import java.util.Iterator;
 
-
-/* https://en.wikipedia.org/wiki/Internet_Control_Message_Protocol#Header */
-public class ICMP extends Protocol {
+/**
+ * Parsing ICMP protocol. This class provides an API compatible
+ * with {@link Protocol}. For more information of ICMP protocol,
+ * see en.wikipedia.org/wiki/Internet_Control_Message_Protocol
+ *
+ * @author  Jiaxu Duan
+ * @since   5/12/18
+ * @see     com.jduan.pcap.Protocol
+ */
+public final class ICMP extends Protocol {
     public final static int TYPE = 0;            /* 1, ICMP type */
     public final static int CODE = 1;            /* 1, ICMP subtype */
     public final static int CHECKSUM = 2;        /* 2, Error checking data */
@@ -18,6 +24,7 @@ public class ICMP extends Protocol {
         start = __start;
     }
 
+    @Override
     public String field(int id) {
         assert (data_buf != null);
         switch (id) {
@@ -32,32 +39,16 @@ public class ICMP extends Protocol {
         }
     }
 
+    @Override
     public String type() {
         return "ICMP";
     }
 
+    @Override
     public String text() {
         return String.format("ICMP:\t TYPE:%s, CODE:%s",
                 field(ICMP.TYPE),
                 field(ICMP.CODE)
         );
-    }
-
-    public static void main(String[] args) {
-        Pcap pcap = new Pcap("icmp.pcap");
-        pcap.unpack();
-        Iterator<Protocol> iter = pcap.iterator();
-        Protocol eth = iter.next();
-        if (eth instanceof Ethernet) {
-            Protocol ip = eth.next();
-            if (ip instanceof IPv4) {
-                Protocol icmp = ip.next();
-                if (icmp instanceof ICMP) {
-                    System.out.println("TYPE: " + icmp.field(ICMP.TYPE));
-                    System.out.println("CODE: " + icmp.field(ICMP.CODE));
-                    System.out.println("CHECKSUM: " + icmp.field(ICMP.CHECKSUM));
-                }
-            }
-        }
     }
 }

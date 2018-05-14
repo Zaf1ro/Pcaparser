@@ -1,8 +1,17 @@
 package com.jduan.pcap;
 import java.util.Iterator;
 
-/* https://en.wikipedia.org/wiki/Dynamic_Host_Configuration_Protocol */
-public class DHCP extends Protocol {
+
+/**
+ * Parsing DHCP protocol. This class provides an API compatible
+ * with {@link Protocol}. For more information of DHCP protocol,
+ * see https://en.wikipedia.org/wiki/Dynamic_Host_Configuration_Protocol
+ *
+ * @author  Jiaxu Duan
+ * @since   5/12/18
+ * @see     com.jduan.pcap.Protocol
+ */
+public final class DHCP extends Protocol {
     public final static int OP = 0;         /* 1, the general type of message */
     public final static int HTYPE = 1;      /* 1, the type of hardware */
     public final static int HLEN = 2;       /* 1, Hardware Address Length */
@@ -20,7 +29,6 @@ public class DHCP extends Protocol {
     public final static int OPTIONS = 14;   /* , several parameters required for DHCP operation */
 
     private int start;
-    private int DHCP_LEN;
 
     DHCP(byte[] __buf, int __start) {
         assert (__buf != null);
@@ -30,14 +38,10 @@ public class DHCP extends Protocol {
     }
 
     private Protocol link() {
-//        int type = data_buf[start+9];     // proto
-//        switch (type) {
-//            default:
-//                return null;
-//        }
         return null;
     }
 
+    @Override
     public String field(int id) {
         assert (data_buf != null);
         switch (id) {
@@ -76,44 +80,16 @@ public class DHCP extends Protocol {
         }
     }
 
+    @Override
     public String type() {
         return "DHCP";
     }
 
+    @Override
     public String text() {
         return String.format("DHCP:\t OPCODE:%s, TRANSACTION ID:%s",
                 field(DHCP.OP),
                 field(DHCP.XID)
         );
-    }
-
-    public static void main(String[] args) {
-        Pcap pcap = new Pcap("dhcp.pcap");
-        pcap.unpack();
-        Iterator<Protocol> iter = pcap.iterator();
-        Protocol eth = iter.next();
-        if (eth instanceof Ethernet) {
-            Protocol ipv4 = eth.next();
-            if (ipv4 instanceof IPv4) {
-                Protocol udp = ipv4.next();
-                if (udp instanceof UDP) {
-                    Protocol dhcp = udp.next();
-                    if(dhcp instanceof DHCP) {
-                        System.out.println("OP: " + dhcp.field(DHCP.OP));
-                        System.out.println("HTYPE: " + dhcp.field(DHCP.HTYPE));
-                        System.out.println("HLEN: " + dhcp.field(DHCP.HLEN));
-                        System.out.println("HOPS: " + dhcp.field(DHCP.HOPS));
-                        System.out.println("XID: " + dhcp.field(DHCP.XID));
-                        System.out.println("SECS: " + dhcp.field(DHCP.SECS));
-                        System.out.println("FLAGS: " + dhcp.field(DHCP.FLAGS));
-                        System.out.println("CIADDR: " + dhcp.field(DHCP.CIADDR));
-                        System.out.println("YIADDR: " + dhcp.field(DHCP.YIADDR));
-                        System.out.println("SIADDR: " + dhcp.field(DHCP.SIADDR));
-                        System.out.println("GIADDR: " + dhcp.field(DHCP.GIADDR));
-                        System.out.println("CHADDR: " + dhcp.field(DHCP.CHADDR));
-                    }
-                }
-            }
-        }
     }
 }

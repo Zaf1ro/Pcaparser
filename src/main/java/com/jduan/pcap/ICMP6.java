@@ -1,8 +1,16 @@
 package com.jduan.pcap;
 
-import java.util.Iterator;
 
-public class ICMP6 extends Protocol {
+/**
+ * Parsing ICMP6 protocol. This class provides an API compatible
+ * with {@link Protocol}. For more information of ICMP6 protocol,
+ * see en.wikipedia.org/wiki/Internet_Control_Message_Protocol_for_IPv6
+ *
+ * @author  Jiaxu Duan
+ * @since   5/12/18
+ * @see     com.jduan.pcap.Protocol
+ */
+public final class ICMP6 extends Protocol {
     public final static int TYPE = 0;            /* 1, ICMP type */
     public final static int CODE = 1;            /* 1, ICMP subtype */
     public final static int CHECKSUM = 2;        /* 2, Error checking data */
@@ -16,6 +24,7 @@ public class ICMP6 extends Protocol {
         start = __start;
     }
 
+    @Override
     public String field(int id) {
         assert (data_buf != null);
         switch (id) {
@@ -30,35 +39,16 @@ public class ICMP6 extends Protocol {
         }
     }
 
+    @Override
     public String type() {
         return "ICMP6";
     }
 
+    @Override
     public String text() {
         return String.format("ICMP6:\t TYPE:%s, CODE:%s",
                 field(ICMP6.TYPE),
                 field(ICMP6.CODE)
         );
-    }
-
-    public static void main(String[] args) {
-        Pcap pcap = new Pcap("icmp6.pcap");
-        pcap.unpack();
-        Iterator<Protocol> iter = pcap.iterator();
-        Protocol eth = iter.next();
-        if (eth instanceof Ethernet) {
-            Protocol ip4 = eth.next();
-            if (ip4 instanceof IPv4) {
-                Protocol ip6 = ip4.next();
-                if (ip6 instanceof IPv6) {
-                    Protocol icmp6 = ip6.next();
-                    if (icmp6 instanceof ICMP6) {
-                        System.out.println("TYPE: " + icmp6.field(ICMP.TYPE));
-                        System.out.println("CODE: " + icmp6.field(ICMP.CODE));
-                        System.out.println("CHECKSUM: " + icmp6.field(ICMP.CHECKSUM));
-                    }
-                }
-            }
-        }
     }
 }

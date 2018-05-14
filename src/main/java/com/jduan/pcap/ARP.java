@@ -1,10 +1,16 @@
 package com.jduan.pcap;
 
-import java.util.Iterator;
 
-
-/* https://en.wikipedia.org/wiki/Address_Resolution_Protocol#Packet_structure */
-public class ARP extends Protocol {
+/**
+ * Parsing ARP protocol. This class provides an API compatible
+ * with {@link Protocol}. For more information of ARP protocol,
+ * see https://en.wikipedia.org/wiki/Address_Resolution_Protocol
+ *
+ * @author  Jiaxu Duan
+ * @since   5/12/18
+ * @see     com.jduan.pcap.Protocol
+ */
+public final class ARP extends Protocol {
     public final static int HTYPE = 1;     /* 2, Type of network protocol type */
     public final static int PTYPE = 2;     /* 2, Type of internetwork protocol */
     public final static int HLEN = 3;      /* 1, Hardware address length */
@@ -24,6 +30,7 @@ public class ARP extends Protocol {
         start = __start;
     }
 
+    @Override
     public String field(int id) {
         switch (id) {
             case HTYPE:
@@ -49,34 +56,16 @@ public class ARP extends Protocol {
         }
     }
 
+    @Override
     public String type() {
         return "ARP";
     }
 
+    @Override
     public String text() {
         return String.format("ARP:\t SHA:%s, SPA:%s",
                 field(ARP.SHA),
                 field(ARP.SPA)
         );
-    }
-
-    public static void main(String[] args) {
-        Pcap pcap = new Pcap("arp.pcap");
-        Iterator<Protocol> iter = pcap.iterator();
-        Protocol eth = iter.next();
-        if (eth instanceof Ethernet) {
-            Protocol arp = eth.next();
-            if (arp instanceof ARP) {
-                System.out.println("HTYPE: " + arp.field(ARP.HTYPE));
-                System.out.println("PTYPE: " + arp.field(ARP.PTYPE));
-                System.out.println("HLEN: " + arp.field(ARP.HLEN));
-                System.out.println("PLEN: " + arp.field(ARP.PLEN));
-                System.out.println("OPERATION: " + arp.field(ARP.OPERATION));
-                System.out.println("SHA: " + arp.field(ARP.SHA));
-                System.out.println("SPA: " + arp.field(ARP.SPA));
-                System.out.println("THA: " + arp.field(ARP.THA));
-                System.out.println("TPA: " + arp.field(ARP.TPA));
-            }
-        }
     }
 }

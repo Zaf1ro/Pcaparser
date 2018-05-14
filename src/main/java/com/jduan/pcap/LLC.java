@@ -2,13 +2,20 @@ package com.jduan.pcap;
 import java.util.Iterator;
 
 
-/* http://www.networksorcery.com/enp/protocol/ieee8022.htm */
+/**
+ * Parsing LLC protocol. This class provides an API compatible
+ * with {@link Protocol}. For more information of LLC protocol,
+ * see http://www.networksorcery.com/enp/protocol/ieee8022.htm
+ *
+ * @author  Jiaxu Duan
+ * @since   5/12/18
+ * @see     com.jduan.pcap.Protocol
+ */
 public class LLC extends Protocol {
-    public final static int DSAP = 0;            /* 4b, version */
-    public final static int SSAP = 1;                /* 4b, internet Header Length */
-    public final static int CONTROL = 2;                /* 6b, type of service */
+    public final static int DSAP = 0;       /* 4b, version */
+    public final static int SSAP = 1;       /* 4b, internet Header Length */
+    public final static int CONTROL = 2;    /* 6b, type of service */
 
-    private final static int LLC_LEN = 0;
     private int start;
 
     LLC(byte[] __buf, int __start) {
@@ -22,6 +29,7 @@ public class LLC extends Protocol {
         return null;
     }
 
+    @Override
     public String field(int id) {
         assert (data_buf != null);
         switch (id) {
@@ -36,12 +44,14 @@ public class LLC extends Protocol {
         }
     }
 
+    @Override
     public String type() {
-        return "LLC";
+        return "Logical Link Control";
     }
 
+    @Override
     public String text() {
-        return String.format("LLC:\t DSAP:%s, SSAP:%s",
+        return String.format("Logical Link Control:\t DSAP:%s, SSAP:%s",
                 field(LLC.DSAP),
                 field(LLC.SSAP)
         );

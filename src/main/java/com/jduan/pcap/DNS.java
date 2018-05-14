@@ -1,9 +1,16 @@
 package com.jduan.pcap;
-import java.util.Iterator;
 
 
-/* http://www.tcpipguide.com/free/t_DNSMessageHeaderandQuestionSectionFormat.htm */
-public class DNS extends Protocol {
+/**
+ * Parsing DNS protocol. This class provides an API compatible
+ * with {@link Protocol}. For more information of DNS protocol,
+ * see www.tcpipguide.com/free/t_DNSMessageHeaderandQuestionSectionFormat.htm
+ *
+ * @author  Jiaxu Duan
+ * @since   5/12/18
+ * @see     com.jduan.pcap.Protocol
+ */
+public final class DNS extends Protocol {
     public final static int ID = 0;         /* 2, a identification field by device for query */
     public final static int QR = 1;         /* 1b, identify query/response */
     public final static int OPCODE = 2;     /* 4b, the type of query */
@@ -31,6 +38,7 @@ public class DNS extends Protocol {
         return null;
     }
 
+    @Override
     public String field(int id) {
         assert (data_buf != null);
         switch (id) {
@@ -63,43 +71,15 @@ public class DNS extends Protocol {
         }
     }
 
+    @Override
     public String type() {
         return "DNS";
     }
 
+    @Override
     public String text() {
         return String.format("DNS:\t ID:%s",
                 field(DNS.ID)
         );
-    }
-
-    public static void main(String[] args) {
-        Pcap pcap = new Pcap("dns.pcap");
-        pcap.unpack();
-        Iterator<Protocol> iter = pcap.iterator();
-        Protocol eth = iter.next();
-        if (eth instanceof Ethernet) {
-            Protocol ipv4 = eth.next();
-            if (ipv4 instanceof IPv4) {
-                Protocol udp = ipv4.next();
-                if (udp instanceof UDP) {
-                    Protocol dns = udp.next();
-                    if(dns instanceof DNS) {
-                        System.out.println("ID: " + dns.field(DNS.ID));
-                        System.out.println("QR: " + dns.field(DNS.QR));
-                        System.out.println("OPCODE: " + dns.field(DNS.OPCODE));
-                        System.out.println("AA: " + dns.field(DNS.AA));
-                        System.out.println("TC: " + dns.field(DNS.TC));
-                        System.out.println("RD: " + dns.field(DNS.RD));
-                        System.out.println("RA: " + dns.field(DNS.RA));
-                        System.out.println("RCODE: " + dns.field(DNS.RCODE));
-                        System.out.println("QDCOUNT: " + dns.field(DNS.QDCOUNT));
-                        System.out.println("ANCOUNT: " + dns.field(DNS.ANCOUNT));
-                        System.out.println("NSCOUNT: " + dns.field(DNS.NSCOUNT));
-                        System.out.println("ARCOUNT: " + dns.field(DNS.ARCOUNT));
-                    }
-                }
-            }
-        }
     }
 }
