@@ -1,7 +1,7 @@
-# Pcaparser
+# Pcap
 [![experimental](http://badges.github.io/stability-badges/dist/experimental.svg)](http://github.com/badges/stability-badges)
 
-Pcaparser let you programming with Pcap file
+`Pcap` let you programming with Pcap file
 <br /><br />
 
 ## Example
@@ -31,7 +31,7 @@ http://pcaparser.readthedocs.io
 <br /><br />
 
 ## ABOUT
-This code is based on TCP/IP, written, maintained and improved by Jason Duan.
+This code is based on TCP/IP, written, maintained and improved by Jiaxu Duan.
 <br /><br />
 
 ## LICENSE
