@@ -1,10 +1,16 @@
 package com.jduan.pcap;
 
-import java.util.Iterator;
-
 
 // TODO: decode OSPF message
-/* http://www.tcpipguide.com/free/t_OSPFMessageFormats.htm */
+/**
+ * Parsing OSPF protocol. This class provides an API compatible
+ * with {@link Protocol}. For more information of OSPF protocol,
+ * see http://www.tcpipguide.com/free/t_OSPFMessageFormats.htm
+ *
+ * @author  Jiaxu Duan
+ * @since   5/12/18
+ * @see     com.jduan.pcap.Protocol
+ */
 public class OSPF extends Protocol {
     public final static int VERSION = 0;        /* 1, Version Number */
     public final static int TYPE = 1;           /* 1, type of OSPF message */
@@ -15,7 +21,6 @@ public class OSPF extends Protocol {
     public final static int AUTYPE = 6;         /* 2, authentication type */
     public final static int AUTHENTICATION = 7; /* 8, authentication of the message */
 
-    private final static int OSPF_LEN = 24;
     private int start;
 
     OSPF(byte[] __buf, int __start) {
@@ -24,6 +29,7 @@ public class OSPF extends Protocol {
         start = __start;
     }
 
+    @Override
     public String field(int id) {
         assert (data_buf != null);
         switch (id) {
@@ -48,39 +54,16 @@ public class OSPF extends Protocol {
         }
     }
 
+    @Override
     public String type() {
         return "OSPF";
     }
 
+    @Override
     public String text() {
         return String.format("OSPF:\t ROUTER ID:%s, AREA ID:%s",
                 field(OSPF.ROUTER_ID),
                 field(OSPF.AREA_ID)
         );
-    }
-
-    public static void main(String[] args) {
-        Pcap pcap = new Pcap("ospf.pcap");
-        pcap.unpack();
-
-        Iterator<Protocol> iter = pcap.iterator();
-        Protocol eth = iter.next();
-        if (eth instanceof Ethernet) {
-            Protocol ip = eth.next();
-            if (ip instanceof IPv4) {
-                Protocol ospf = ip.next();
-                if (ospf instanceof OSPF) {
-                    System.out.println("VERSION: " + ospf.field(OSPF.VERSION));
-                    System.out.println("TYPE: " + ospf.field(OSPF.TYPE));
-                    System.out.println("PACKET_LENGTH: " + ospf.field(OSPF.PACKET_LENGTH));
-                    System.out.println("ROUTER_ID: " + ospf.field(OSPF.ROUTER_ID));
-                    System.out.println("AREA_ID: " + ospf.field(OSPF.AREA_ID));
-                    System.out.println("CHECKSUM: " + ospf.field(OSPF.CHECKSUM));
-                    System.out.println("AUTYPE: " + ospf.field(OSPF.AUTYPE));
-                    System.out.println("AUTHENTICATION: " + ospf.field(OSPF.AUTHENTICATION));
-                }
-            }
-        }
-
     }
 }
