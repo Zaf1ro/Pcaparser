@@ -13,14 +13,14 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @author  Jiaxu Duan
  * @since   5/12/18
  */
-final class PktHdr_Test {
+final class Pcap_Test {
     private final static Timer timer = new Timer();
     private static Pcap pcap;
 
     @BeforeAll
     static void start() {
         timer.start();
-        pcap = new Pcap(PktHdr_Test.class.getResource("/ipv4.pcap").getPath());
+        pcap = new Pcap(Pcap_Test.class.getResource("/ipv4.pcap").getPath());
         assertNotNull(pcap);
         pcap.unpack();
         timer.end("PktHdr test case unpack time-consuming");
