@@ -20,10 +20,13 @@ class PktHdr extends Protocol {
         return Utils.lBytes2Int(data_buf, 12);
     }
 
-    /* This method will return the field as String
+    /**
+     * This method will return the field as String
+     *
      * @author Jiaxu Duan
      * @date date()
      */
+    @Override
     public String field(int field) {
         switch (field) {
             case TS_SEC:
@@ -39,12 +42,14 @@ class PktHdr extends Protocol {
         }
     }
 
+    @Override
     public String type() {
-        return "Protocol Header";
+        return "Pcap File Header";
     }
 
+    @Override
     public String text() {
-        return String.format("Protocol Header: ts:%s, ts_us:%s, caplen:%s",
+        return String.format("Pcap File Header: ts:%s, ts_us:%s, caplen:%s",
                 field(PktHdr.TS_SEC),
                 field(PktHdr.TS_USEC),
                 field(PktHdr.INCL_LEN)

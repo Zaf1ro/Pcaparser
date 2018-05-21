@@ -1,16 +1,21 @@
 package com.jduan.pcap;
 
-import java.util.Iterator;
 
-
-/* https://en.wikipedia.org/wiki/Point-to-Point_Protocol#Structure_of_a_PPP_frame */
-public class PPP extends Protocol {
+/**
+ * Parsing PPP protocol. This class provides an API compatible
+ * with {@link Protocol}. For more information of PPP protocol,
+ * see https://en.wikipedia.org/wiki/Point-to-Point_Protocol
+ *
+ * @author  Jiaxu Duan
+ * @since   5/12/18
+ * @see     com.jduan.pcap.Protocol
+ */
+public final class PPP extends Protocol {
     public final static int ADDR = 0;       /* 1, standard broadcast address */
     public final static int CONTROL = 1;    /* 1, unnumbered data */
     public final static int PROTOCOL = 2;   /* 2, PPP ID of embedded data */
 
     private PktHdr pktHdr;
-    private final static int PPP_LEN = 4;
 
     PPP() {
         pktHdr = new PktHdr();
@@ -18,6 +23,7 @@ public class PPP extends Protocol {
         Pcap.reader.fill(data_buf);
     }
 
+    @Override
     public String field(int id) {
         switch (id) {
             case ADDR:
@@ -31,26 +37,15 @@ public class PPP extends Protocol {
         }
     }
 
+    @Override
     public String type() {
         return "PPP";
     }
 
+    @Override
     public String text() {
         return String.format("PPP:\t ADDR:%s\n",
                 field(PPP.ADDR)
         );
-    }
-
-    public static void main(String[] args) {
-        Pcap pcap = new Pcap("ppp.pcap");
-        pcap.unpack();
-
-        Iterator<Protocol> iter = pcap.iterator();
-        Protocol ppp = iter.next();
-        if (ppp instanceof PPP) {
-            System.out.println("ADDR: " + ppp.field(PPP.ADDR));
-            System.out.println("CONTROL: " + ppp.field(PPP.CONTROL));
-            System.out.println("PROTOCOL: " + ppp.field(PPP.PROTOCOL));
-        }
     }
 }

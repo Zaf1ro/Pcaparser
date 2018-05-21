@@ -7,8 +7,16 @@ import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-
-/* https://wiki.wireshark.org/Development/LibpcapFileFormat#Global_Header */
+// TODO: get data from network adaptor
+/*  */
+/**
+ * Parsing Pcap file header. For more information of Pcap file header,
+ * see https://wiki.wireshark.org/Development/LibpcapFileFormat#Global_Header
+ *
+ * @author  Jiaxu Duan
+ * @since   5/12/18
+ * @see     com.jduan.pcap.Protocol
+ */
 public class Pcap {
     public final static int MAGIC = 1;      /* 32, magic number */
     public final static int V_MAJOR = 2;    /* 16, major version number */
@@ -18,6 +26,7 @@ public class Pcap {
     public final static int SNAPLEN = 6;    /* 32, max length pf captured protocols */
     public final static int LINKTYPE = 7;   /* 32, data line type */
 
+    /* Type of datalink layer */
     private final static int DLT_ETHERNET = 0x0001;     /* Ethernet -> EthernetII, IEEE802.3 */
     private final static int DLT_PPP = 0x0009;          /* Point-to-Point Protocol */
     private final static int DLT_IEEE802_11 = 0x0069;   /* IEEE 802.11 wireless LAN */
@@ -32,8 +41,8 @@ public class Pcap {
         // get data from network
     }
 
-    public Pcap(String filepath) {
-        reader = new Reader(filepath);
+    public Pcap(String pcap_path) {
+        reader = new Reader(pcap_path);
         packets = new ArrayList<>();
 //        proto_map = new HashMap<>();
     }
@@ -85,6 +94,7 @@ public class Pcap {
         return new PacketItr(index);
     }
 
+    /* Implementation of iteration */
     private class PacketItr implements Iterator<Protocol> {
         int cursor;
         int size;
@@ -149,7 +159,7 @@ public class Pcap {
                 break;
         }
 
-        /* unsupported datalink type */
+        /* unsupported type of datalink */
         assert(cDatalink != null);
 
         Constructor constructor = null;
