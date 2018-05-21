@@ -1,8 +1,16 @@
 package com.jduan.pcap;
-import java.util.Iterator;
 
-/* http://cs.baylor.edu/~donahoo/tools/hacknet/original/Rip/techni.htm */
-public class RIP extends Protocol {
+
+/**
+ * Parsing RIP protocol. This class provides an API compatible
+ * with {@link Protocol}. For more information of RIP protocol,
+ * see http://cs.baylor.edu/~donahoo/tools/hacknet/original/Rip/techni.htm
+ *
+ * @author  Jiaxu Duan
+ * @since   5/12/18
+ * @see     com.jduan.pcap.Protocol
+ */
+public final class RIP extends Protocol {
     public final static int COMMAND = 0;    /* 1, packet type */
     public final static int VERSION = 1;    /* 1, RIP version number */
     public final static int AFI = 2;        /* 2, when it is 2, it represents IP */
@@ -10,7 +18,6 @@ public class RIP extends Protocol {
     public final static int METRIC = 4;     /* 4, the hop count to its destination */
 
     private int start;
-    private int RIP_LEN = 24;
 
     RIP(byte[] __buf, int __start) {
         assert (__buf != null);
@@ -23,6 +30,7 @@ public class RIP extends Protocol {
         return null;
     }
 
+    @Override
     public String field(int id) {
         assert (data_buf != null);
         switch (id) {
@@ -41,38 +49,16 @@ public class RIP extends Protocol {
         }
     }
 
+    @Override
     public String type() {
         return "RIP";
     }
 
+    @Override
     public String text() {
         return String.format("RIP:\t COMMAND:%s, VERSION:%s",
                 field(RIP.COMMAND),
                 field(RIP.VERSION)
         );
-    }
-
-    public static void main(String[] args) {
-        Pcap pcap = new Pcap("rip.pcap");
-        pcap.unpack();
-        Iterator<Protocol> iter = pcap.iterator();
-        iter.next();
-        Protocol eth = iter.next();
-        if (eth instanceof Ethernet) {
-            Protocol ipv4 = eth.next();
-            if (ipv4 instanceof IPv4) {
-                Protocol udp = ipv4.next();
-                if (udp instanceof UDP) {
-                    Protocol rip = udp.next();
-                    if(rip instanceof RIP) {
-                        System.out.println("COMMAND: " + rip.field(RIP.COMMAND));
-                        System.out.println("VERSION: " + rip.field(RIP.VERSION));
-                        System.out.println("AFI: " + rip.field(RIP.AFI));
-                        System.out.println("IADDR: " + rip.field(RIP.IADDR));
-                        System.out.println("METRIC: " + rip.field(RIP.METRIC));
-                    }
-                }
-            }
-        }
     }
 }
