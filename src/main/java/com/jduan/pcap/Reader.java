@@ -20,7 +20,7 @@ public class Reader {
         filePath = filepath;
         try {
             initNIO();
-        } catch (PcapIOException e) {
+        } catch (PcapException e) {
             e.printStackTrace();
         }
     }
@@ -35,7 +35,7 @@ public class Reader {
         MappedByteBuffer zBuffer = null;
         try {
             zBuffer = zRead(len);
-        } catch (PcapIOException e) {
+        } catch (PcapException e) {
             e.printStackTrace();
         }
 
@@ -51,7 +51,7 @@ public class Reader {
         MappedByteBuffer zBuffer = null;
         try {
             zBuffer = zRead(size);
-        } catch (PcapIOException e) {
+        } catch (PcapException e) {
             e.printStackTrace();
         }
 
@@ -63,23 +63,23 @@ public class Reader {
         return read(fileSize);
     }
 
-    private void initNIO() throws PcapIOException {
+    private void initNIO() throws PcapException {
         try {
             aFile = new RandomAccessFile(filePath, "r");
             fChannel = aFile.getChannel();
             fileSize = fChannel.size();
         } catch (IOException e) {
-            throw new PcapIOException("Cant find the file: ", filePath);
+            throw new PcapException("IO Error: Cant find the file: " + filePath);
         }
     }
 
-    private MappedByteBuffer zRead(long size) throws PcapIOException {
+    private MappedByteBuffer zRead(long size) throws PcapException {
         MappedByteBuffer zBuffer;
         try {
             zBuffer = fChannel.map(FileChannel.MapMode.READ_ONLY, offset, size);
             zBuffer.load();
         } catch (IOException e) {
-            throw new PcapIOException("Cant read the file at: ", offset);
+            throw new PcapException("IO Error: Cant read the file at: " + offset);
         }
         zBuffer.order(ByteOrder.LITTLE_ENDIAN);
         return zBuffer;
@@ -91,7 +91,7 @@ public class Reader {
                 aFile.close();
             }
         } catch (IOException e) {
-            throw new PcapIOException("Cant close file: ", filePath);
+            throw new PcapException("IO Error: Cant close file: " + filePath);
         }
     }
 }

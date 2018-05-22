@@ -8,7 +8,6 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 // TODO: get data from network adaptor
-/*  */
 /**
  * Parsing Pcap file header. For more information of Pcap file header,
  * see https://wiki.wireshark.org/Development/LibpcapFileFormat#Global_Header
@@ -169,5 +168,23 @@ public class Pcap {
             e.printStackTrace();
         }
         return constructor;
+    }
+}
+
+
+/**
+ * Pcap Exception Class
+ *
+ * @author  Jiaxu Duan
+ * @since   5/12/18
+ * @see     Exception
+ */
+class PcapException extends Exception {
+    public PcapException() {
+        super();
+    }
+
+    public PcapException(String msg) {
+        super(msg);
     }
 }
